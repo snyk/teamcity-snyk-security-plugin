@@ -9,3 +9,9 @@ services:
       - "./distribution/docker/data:/data/teamcity_server/datadir"
     environment:
       - TEAMCITY_SERVER_MEM_OPTS="-Xmx512m"
+
+  agent:
+    image: "jetbrains/teamcity-agent:2018.2.3"
+    environment:
+      - AGENT_NAME=agent-with-snyk-cli
+      - SERVER_URL=server:8111
