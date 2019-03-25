@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<teamcity-plugin xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:schemas-jetbrains-com:teamcity-plugin-v1-xml">
+  <info>
+    <name>teamcity-snyk-security-plugin</name>
+    <display-name>Snyk Security</display-name>
+    <version>${revision}</version>
+    <description>Adds the ability to test your code dependencies for vulnerabilities against Snyk database</description>
+    <vendor>
+      <name>Snyk Ltd.</name>
+      <url>https://snyk.io</url>
+    </vendor>
+  </info>
+  <deployment use-separate-classloader="true"/>
+</teamcity-plugin>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>io.snyk.plugins</groupId>
+    <artifactId>teamcity-snyk-security-plugin</artifactId>
+    <version>${revision}</version>
+  </parent>
+
+  <artifactId>distribution</artifactId>
+  <packaging>pom</packaging>
+
+  <name>Snyk Security: Distribution</name>
+
+  <dependencies>
+    <dependency>
+      <groupId>io.snyk.plugins</groupId>
+      <artifactId>teamcity-snyk-security-plugin-agent</artifactId>
+      <version>${revision}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.snyk.plugins</groupId>
+      <artifactId>teamcity-snyk-security-plugin-server</artifactId>
+      <version>${revision}</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>make-plugin-assembly</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
+              <finalName>${project.parent.artifactId}</finalName>
+              <appendAssemblyId>false</appendAssemblyId>
+              <outputDirectory>${project.build.directory}</outputDirectory>
+              <descriptors>
+                <descriptor>src/assembly/plugin.xml</descriptor>
+              </descriptors>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+  <profiles>
+    <profile>
+      <id>docker</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>create-plugin-archive-for-docker-mount-volumes</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>single</goal>
+                </goals>
+                <configuration>
+                  <finalName>${project.parent.artifactId}</finalName>
+                  <appendAssemblyId>false</appendAssemblyId>
+                  <outputDirectory>${project.basedir}/docker/data/plugins</outputDirectory>
+                  <descriptors>
+                    <descriptor>src/assembly/plugin.xml</descriptor>
+                  </descriptors>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+</project>

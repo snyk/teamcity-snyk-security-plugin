@@ -1,0 +1,35 @@
+#################################
+# Compiled source               #
+#################################
+bin/
+target/
+
+#################################
+# Docker & Compose files        #
+#################################
+/distribution/docker/
+docker-compose.override.yml
+.env
+
+#################################
+# IDE generated files           #
+#################################
+.idea/
+*.iml
+.settings/
+.classpath
+.project
+
+#################################
+# Logs and temp files           #
+#################################
+*.log
+*.swp
+*~
+
+#################################
+# OS generated files            #
+#################################
+Thumbs.db
+.directory
+.DS_Store

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<assembly xmlns="http://maven.apache.org/ASSEMBLY/2.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.0.0 http://maven.apache.org/xsd/assembly-2.0.0.xsd">
+  <id>plugin-packaging-assembly</id>
+  <formats>
+    <format>zip</format>
+  </formats>
+  <includeBaseDirectory>false</includeBaseDirectory>
+  <files>
+    <file>
+      <source>../teamcity-snyk-security-plugin-agent/target/teamcity-snyk-security-plugin-agent.zip</source>
+      <outputDirectory>agent</outputDirectory>
+    </file>
+    <file>
+      <source>../teamcity-snyk-security-plugin-server/target/teamcity-snyk-security-plugin-server/teamcity-plugin.xml</source>
+      <outputDirectory>${file.separator}</outputDirectory>
+    </file>
+  </files>
+  <fileSets>
+    <fileSet>
+      <directory>../teamcity-snyk-security-plugin-server/target/teamcity-snyk-security-plugin-server/server</directory>
+      <outputDirectory>server</outputDirectory>
+    </fileSet>
+  </fileSets>
+</assembly>

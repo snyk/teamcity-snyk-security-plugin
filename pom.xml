@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>io.snyk.plugins</groupId>
+  <artifactId>teamcity-snyk-security-plugin</artifactId>
+  <version>${revision}</version>
+  <packaging>pom</packaging>
+
+  <name>Snyk Security: Aggregator</name>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.build.resourceEncoding>UTF-8</project.build.resourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+    <project.sourceCompatibility>1.8</project.sourceCompatibility>
+    <project.targetCompatibility>1.8</project.targetCompatibility>
+
+    <!-- will be overridden in CD pipeline -->
+    <revision>LOCAL-SNAPSHOT</revision>
+
+    <!--
+     | dependency and plugin versions, please keep alphabetical.
+     | each version property should be of the form "version.<identifier>".
+    -->
+    <version.maven.assembly.plugin>3.1.1</version.maven.assembly.plugin>
+    <version.maven.clean.plugin>3.1.0</version.maven.clean.plugin>
+    <version.maven.compiler.plugin>3.8.0</version.maven.compiler.plugin>
+    <version.maven.deploy.plugin>3.0.0-M1</version.maven.deploy.plugin>
+    <version.maven.install.plugin>3.0.0-M1</version.maven.install.plugin>
+    <version.maven.jar.plugin>3.1.1</version.maven.jar.plugin>
+    <version.maven.resources.plugin>3.1.0</version.maven.resources.plugin>
+    <version.maven.site.plugin>3.7.1</version.maven.site.plugin>
+    <version.maven.surefire.plugin>3.0.0-M3</version.maven.surefire.plugin>
+    <version.teamcity>2018.2</version.teamcity>
+  </properties>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-assembly-plugin</artifactId>
+          <version>${version.maven.assembly.plugin}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-clean-plugin</artifactId>
+          <version>${version.maven.clean.plugin}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>${version.maven.compiler.plugin}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-deploy-plugin</artifactId>
+          <version>${version.maven.deploy.plugin}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-install-plugin</artifactId>
+          <version>${version.maven.install.plugin}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-jar-plugin</artifactId>
+          <version>${version.maven.jar.plugin}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-resources-plugin</artifactId>
+          <version>${version.maven.resources.plugin}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-site-plugin</artifactId>
+          <version>${version.maven.site.plugin}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>${version.maven.surefire.plugin}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.jetbrains.teamcity</groupId>
+          <artifactId>server-api</artifactId>
+          <version>${version.teamcity}</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>1.8</source>
+          <target>1.8</target>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <modules>
+    <module>teamcity-snyk-security-plugin-agent</module>
+    <module>teamcity-snyk-security-plugin-server</module>
+    <module>distribution</module>
+  </modules>
+
+  <repositories>
+    <repository>
+      <id>jetbrains-all</id>
+      <url>http://download.jetbrains.com/teamcity-repository</url>
+    </repository>
+  </repositories>
+</project>
