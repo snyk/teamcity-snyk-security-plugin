@@ -70,7 +70,7 @@
                 <configuration>
                   <finalName>${project.parent.artifactId}</finalName>
                   <appendAssemblyId>false</appendAssemblyId>
-                  <outputDirectory>${project.basedir}/docker/data/plugins</outputDirectory>
+                  <outputDirectory>${project.basedir}/docker/server/plugins</outputDirectory>
                   <descriptors>
                     <descriptor>src/assembly/plugin.xml</descriptor>
                   </descriptors>

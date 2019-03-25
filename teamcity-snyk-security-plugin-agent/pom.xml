@@ -47,6 +47,20 @@
               </descriptors>
             </configuration>
           </execution>
+          <execution>
+            <id>make-runner-assembly</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
+              <finalName>teamcity-snyk-security-plugin-runner</finalName>
+              <appendAssemblyId>false</appendAssemblyId>
+              <descriptors>
+                <descriptor>src/assembly/runner.xml</descriptor>
+              </descriptors>
+            </configuration>
+          </execution>
         </executions>
       </plugin>
     </plugins>

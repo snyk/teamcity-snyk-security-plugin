@@ -11,6 +11,10 @@
       <outputDirectory>agent</outputDirectory>
     </file>
     <file>
+      <source>../teamcity-snyk-security-plugin-agent/target/teamcity-snyk-security-plugin-runner.zip</source>
+      <outputDirectory>agent</outputDirectory>
+    </file>
+    <file>
       <source>../teamcity-snyk-security-plugin-server/target/teamcity-snyk-security-plugin-server/teamcity-plugin.xml</source>
       <outputDirectory>${file.separator}</outputDirectory>
     </file>
