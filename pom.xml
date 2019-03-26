@@ -104,6 +104,7 @@
   </build>
 
   <modules>
+    <module>teamcity-snyk-security-plugin-common</module>
     <module>teamcity-snyk-security-plugin-agent</module>
     <module>teamcity-snyk-security-plugin-server</module>
     <module>distribution</module>

@@ -20,6 +20,17 @@
       <version>${version.teamcity}</version>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>org.jetbrains.teamcity.internal</groupId>
+      <artifactId>server</artifactId>
+      <version>${version.teamcity}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.snyk.plugins</groupId>
+      <artifactId>teamcity-snyk-security-plugin-common</artifactId>
+      <version>${revision}</version>
+    </dependency>
   </dependencies>
 
   <build>
