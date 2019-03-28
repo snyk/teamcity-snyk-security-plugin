@@ -48,6 +48,7 @@
             <configuration>
               <finalName>teamcity-snyk-security-plugin-server</finalName>
               <appendAssemblyId>false</appendAssemblyId>
+              <attach>false</attach>
               <descriptors>
                 <descriptor>src/assembly/server.xml</descriptor>
               </descriptors>
