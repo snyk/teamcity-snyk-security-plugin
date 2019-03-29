@@ -4,6 +4,7 @@
     <layout>
       <executable-files>
         <include name="bin/1.143.1/snyk-linux"/>
+        <include name="bin/1.143.1/snyk-to-html-linux"/>
       </executable-files>
     </layout>
   </tool-deployment>
