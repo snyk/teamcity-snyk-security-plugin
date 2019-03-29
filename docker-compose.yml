@@ -4,11 +4,11 @@ services:
   server:
     image: "jetbrains/teamcity-server:2018.2.3"
     ports:
-      - "8111:8111"
+      - "${TC_PORT:-8111}:8111"
     volumes:
       - "./distribution/docker/server:/data/teamcity_server/datadir"
     environment:
-      - TEAMCITY_SERVER_MEM_OPTS="-Xmx512m"
+      - TEAMCITY_SERVER_MEM_OPTS="-Xmx1024m"
 
   agent:
     image: "jetbrains/teamcity-agent:2018.2.3"
