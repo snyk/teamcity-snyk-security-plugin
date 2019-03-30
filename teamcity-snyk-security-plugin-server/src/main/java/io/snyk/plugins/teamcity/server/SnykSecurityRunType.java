@@ -15,7 +15,7 @@ import jetbrains.buildServer.web.openapi.PluginDescriptor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import static com.intellij.openapi.util.text.StringUtil.isEmptyOrSpaces;
+import static jetbrains.buildServer.util.PropertiesUtil.isEmptyOrNull;
 
 public class SnykSecurityRunType extends RunType {
 
@@ -54,10 +54,10 @@ public class SnykSecurityRunType extends RunType {
       }
 
       List<InvalidProperty> findings = new ArrayList<>(0);
-      if (isEmptyOrSpaces(properties.get("secure:snyk.apiToken"))) {
+      if (isEmptyOrNull(properties.get("secure:snyk.apiToken"))) {
         findings.add(new InvalidProperty("secure:snyk.apiToken", "Snyk API token must be specified."));
       }
-      if (isEmptyOrSpaces(properties.get("snyk.version"))) {
+      if (isEmptyOrNull(properties.get("snyk.version"))) {
         findings.add(new InvalidProperty("snyk.version", "Please define a Snyk version."));
       }
       return findings;
@@ -80,5 +80,13 @@ public class SnykSecurityRunType extends RunType {
   @Override
   public Map<String, String> getDefaultRunnerProperties() {
     return new HashMap<>(0);
+  }
+
+  @NotNull
+  @Override
+  public String describeParameters(@NotNull Map<String, String> parameters) {
+    String severityThreshold = parameters.get("snyk.severityThreshold");
+    String monitorProjectOnBuild = parameters.get("snyk.monitorProjectOnBuild");
+    return String.format("Severity threshold: %s%nMonitor project on build: %s", severityThreshold, monitorProjectOnBuild);
   }
 }
