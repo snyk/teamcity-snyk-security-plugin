@@ -14,36 +14,42 @@
         <props:option value="medium">medium</props:option>
         <props:option value="high">high</props:option>
       </props:selectProperty>
+      <span class="smallNote">Only report vulnerabilities of provided level or higher (low/medium/high).</span>
     </td>
   </tr>
   <tr>
     <th><label>Monitor project on build:</label></th>
     <td>
       <props:checkboxProperty name="snyk.monitorProjectOnBuild"/>
+      <span class="smallNote">Take a current application dependencies snapshot for continuous monitoring by Snyk.</span>
     </td>
   </tr>
   <tr class="advancedSetting">
     <th><label>File:</label></th>
     <td>
       <props:textProperty name="snyk.file" className="longField"/>
+      <span class="smallNote">The path to the manifest file to be used by Snyk.</span>
     </td>
   </tr>
   <tr class="advancedSetting">
     <th><label>Organisation:</label></th>
     <td>
       <props:textProperty name="snyk.organisation" className="longField"/>
+      <span class="smallNote">The Snyk organisation in which this project should be tested and monitored.</span>
     </td>
   </tr>
   <tr class="advancedSetting">
     <th><label>Project name:</label></th>
     <td>
       <props:textProperty name="snyk.projectName" className="longField"/>
+      <span class="smallNote">A custom name for the Snyk project created for this TeamCity project on every build.</span>
     </td>
   </tr>
   <tr class="advancedSetting">
     <th><label>Additional parameters:</label></th>
     <td>
       <props:textProperty name="snyk.additionalParameters" className="longField" expandable="true"/>
+      <span class="smallNote">Refer to the <a href="https://snyk.io/docs/using-snyk">Snyk CLI help page</a> for information on additional arguments.</span>
     </td>
   </tr>
 </l:settingsGroup>
@@ -53,6 +59,8 @@
     <th><label>Snyk API token:</label><l:star/></th>
     <td>
       <props:passwordProperty name="secure:snyk.apiToken" className="longField"/>
+      <span class="smallNote">The API token to be used to authenticate to Snyk.</span>
+      <span class="error" id="error_secure:snyk.apiToken"></span>
     </td>
   </tr>
   <tr>
@@ -63,6 +71,7 @@
           <props:option value="${snykVersion}">${snykVersion}</props:option>
         </c:forEach>
       </props:selectProperty>
+      <span class="error" id="error_snyk.version"></span>
     </td>
   </tr>
 </l:settingsGroup>

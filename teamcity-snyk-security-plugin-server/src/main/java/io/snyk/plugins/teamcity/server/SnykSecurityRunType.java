@@ -1,16 +1,21 @@
 package io.snyk.plugins.teamcity.server;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants;
+import jetbrains.buildServer.serverSide.InvalidProperty;
 import jetbrains.buildServer.serverSide.PropertiesProcessor;
 import jetbrains.buildServer.serverSide.RunType;
 import jetbrains.buildServer.serverSide.RunTypeRegistry;
 import jetbrains.buildServer.web.openapi.PluginDescriptor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import static com.intellij.openapi.util.text.StringUtil.isEmptyOrSpaces;
 
 public class SnykSecurityRunType extends RunType {
 
@@ -43,7 +48,20 @@ public class SnykSecurityRunType extends RunType {
   @Nullable
   @Override
   public PropertiesProcessor getRunnerPropertiesProcessor() {
-    return propertiesProcessor -> new ArrayList<>(0);
+    return properties -> {
+      if (properties == null) {
+        return Collections.emptyList();
+      }
+
+      List<InvalidProperty> findings = new ArrayList<>(0);
+      if (isEmptyOrSpaces(properties.get("secure:snyk.apiToken"))) {
+        findings.add(new InvalidProperty("secure:snyk.apiToken", "Snyk API token must be specified."));
+      }
+      if (isEmptyOrSpaces(properties.get("snyk.version"))) {
+        findings.add(new InvalidProperty("snyk.version", "Please define a Snyk version."));
+      }
+      return findings;
+    };
   }
 
   @Nullable
