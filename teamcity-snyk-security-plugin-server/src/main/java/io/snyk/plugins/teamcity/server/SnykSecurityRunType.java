@@ -79,7 +79,10 @@ public class SnykSecurityRunType extends RunType {
   @Nullable
   @Override
   public Map<String, String> getDefaultRunnerProperties() {
-    return new HashMap<>(0);
+    Map<String, String> defaultProperties = new HashMap<>(2);
+    defaultProperties.put("snyk.severityThreshold", "low");
+    defaultProperties.put("snyk.monitorProjectOnBuild", "true");
+    return defaultProperties;
   }
 
   @NotNull
