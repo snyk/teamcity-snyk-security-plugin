@@ -19,6 +19,7 @@ import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.API_TO
 import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.MONITOR_PROJECT_ON_BUILD;
 import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.SEVERITY_THRESHOLD;
 import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.VERSION;
+import static jetbrains.buildServer.util.PropertiesUtil.getBoolean;
 import static jetbrains.buildServer.util.PropertiesUtil.isEmptyOrNull;
 
 public class SnykSecurityRunType extends RunType {
@@ -92,8 +93,8 @@ public class SnykSecurityRunType extends RunType {
   @NotNull
   @Override
   public String describeParameters(@NotNull Map<String, String> parameters) {
-    String severityThreshold = parameters.get(SEVERITY_THRESHOLD);
-    String monitorProjectOnBuild = parameters.get(MONITOR_PROJECT_ON_BUILD);
+    String severityThreshold = isEmptyOrNull(parameters.get(SEVERITY_THRESHOLD)) ? "low (default)" : parameters.get(SEVERITY_THRESHOLD);
+    String monitorProjectOnBuild = getBoolean(parameters.get(MONITOR_PROJECT_ON_BUILD)) ? "ON" : "OFF";
     return String.format("Severity threshold: %s%nMonitor project on build: %s", severityThreshold, monitorProjectOnBuild);
   }
 }
