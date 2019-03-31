@@ -15,6 +15,10 @@ import jetbrains.buildServer.web.openapi.PluginDescriptor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.API_TOKEN;
+import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.MONITOR_PROJECT_ON_BUILD;
+import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.SEVERITY_THRESHOLD;
+import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.VERSION;
 import static jetbrains.buildServer.util.PropertiesUtil.isEmptyOrNull;
 
 public class SnykSecurityRunType extends RunType {
@@ -54,11 +58,11 @@ public class SnykSecurityRunType extends RunType {
       }
 
       List<InvalidProperty> findings = new ArrayList<>(0);
-      if (isEmptyOrNull(properties.get("secure:snyk.apiToken"))) {
-        findings.add(new InvalidProperty("secure:snyk.apiToken", "Snyk API token must be specified."));
+      if (isEmptyOrNull(properties.get(API_TOKEN))) {
+        findings.add(new InvalidProperty(API_TOKEN, "Snyk API token must be specified."));
       }
-      if (isEmptyOrNull(properties.get("snyk.version"))) {
-        findings.add(new InvalidProperty("snyk.version", "Please define a Snyk version."));
+      if (isEmptyOrNull(properties.get(VERSION))) {
+        findings.add(new InvalidProperty(VERSION, "Please define a Snyk version."));
       }
       return findings;
     };
@@ -80,16 +84,16 @@ public class SnykSecurityRunType extends RunType {
   @Override
   public Map<String, String> getDefaultRunnerProperties() {
     Map<String, String> defaultProperties = new HashMap<>(2);
-    defaultProperties.put("snyk.severityThreshold", "low");
-    defaultProperties.put("snyk.monitorProjectOnBuild", "true");
+    defaultProperties.put(SEVERITY_THRESHOLD, "low");
+    defaultProperties.put(MONITOR_PROJECT_ON_BUILD, "true");
     return defaultProperties;
   }
 
   @NotNull
   @Override
   public String describeParameters(@NotNull Map<String, String> parameters) {
-    String severityThreshold = parameters.get("snyk.severityThreshold");
-    String monitorProjectOnBuild = parameters.get("snyk.monitorProjectOnBuild");
+    String severityThreshold = parameters.get(SEVERITY_THRESHOLD);
+    String monitorProjectOnBuild = parameters.get(MONITOR_PROJECT_ON_BUILD);
     return String.format("Severity threshold: %s%nMonitor project on build: %s", severityThreshold, monitorProjectOnBuild);
   }
 }
