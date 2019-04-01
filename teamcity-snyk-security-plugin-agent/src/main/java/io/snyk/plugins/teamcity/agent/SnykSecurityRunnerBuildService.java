@@ -9,6 +9,7 @@ import java.util.List;
 import io.snyk.plugins.teamcity.common.runner.Platform;
 import io.snyk.plugins.teamcity.common.runner.RunnerVersion;
 import io.snyk.plugins.teamcity.common.runner.Runners;
+import jetbrains.buildServer.RunBuildException;
 import jetbrains.buildServer.agent.BuildAgentSystemInfo;
 import jetbrains.buildServer.agent.runner.BuildServiceAdapter;
 import jetbrains.buildServer.agent.runner.ProgramCommandLine;
@@ -33,7 +34,7 @@ public class SnykSecurityRunnerBuildService extends BuildServiceAdapter {
 
   @NotNull
   @Override
-  public ProgramCommandLine makeProgramCommandLine() {
+  public ProgramCommandLine makeProgramCommandLine() throws RunBuildException {
     Platform platform = null;
     BuildAgentSystemInfo buildAgentSystemInfo = getAgentConfiguration().getSystemInfo();
     if (buildAgentSystemInfo.isUnix()) {
@@ -47,6 +48,9 @@ public class SnykSecurityRunnerBuildService extends BuildServiceAdapter {
     File agentToolsDirectory = getAgentConfiguration().getAgentToolsDirectory();
     String version = getRunnerParameters().get(VERSION);
     RunnerVersion runner = Runners.getRunner(version);
+    if (runner == null) {
+      throw new RunBuildException(format("Snyk Security runner with version '%s' was not found. Please configure the build properly and retry.", version));
+    }
     Path snykToolPath = Paths.get(agentToolsDirectory.getAbsolutePath(),
                                   "teamcity-snyk-security-plugin-runner", "bin", version, runner.getSnykToolPath(platform));
 
