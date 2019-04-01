@@ -4,7 +4,9 @@ import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import io.snyk.plugins.teamcity.common.runner.Platform;
 import io.snyk.plugins.teamcity.common.runner.RunnerVersion;
@@ -18,6 +20,7 @@ import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.ADDITIONAL_PARAMETERS;
+import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.API_TOKEN;
 import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.FILE;
 import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.ORGANISATION;
 import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.PROJECT_NAME;
@@ -51,12 +54,19 @@ public class SnykSecurityRunnerBuildService extends BuildServiceAdapter {
     if (runner == null) {
       throw new RunBuildException(format("Snyk Security runner with version '%s' was not found. Please configure the build properly and retry.", version));
     }
-    Path snykToolPath = Paths.get(agentToolsDirectory.getAbsolutePath(),
-                                  "teamcity-snyk-security-plugin-runner", "bin", version, runner.getSnykToolPath(platform));
+    Path snykToolPath = Paths.get(agentToolsDirectory.getAbsolutePath(), "teamcity-snyk-security-plugin-runner", "bin", version, runner.getSnykToolPath(platform));
+
+    String snykApiToken = getRunnerParameters().get(API_TOKEN);
+    if (nullIfEmpty(snykApiToken) == null) {
+      throw new RunBuildException("Snyk API token was not defined. Please configure the build properly and retry.");
+    }
+    Map<String, String> envVars = new HashMap<>(getEnvironmentVariables());
+    envVars.put("SNYK_TOKEN", snykApiToken);
+
 
     List<String> arguments = buildArguments();
 
-    return new SimpleProgramCommandLine(getEnvironmentVariables(), getCheckoutDirectory().getAbsolutePath(), snykToolPath.toString(), arguments);
+    return new SimpleProgramCommandLine(envVars, getCheckoutDirectory().getAbsolutePath(), snykToolPath.toString(), arguments);
   }
 
   @NotNull
