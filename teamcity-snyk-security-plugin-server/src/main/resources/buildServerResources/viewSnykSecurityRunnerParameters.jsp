@@ -1,7 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="l" tagdir="/WEB-INF/tags/layout" %>
 <%@ taglib prefix="props" tagdir="/WEB-INF/tags/props" %>
-<%@ taglib prefix="bs" tagdir="/WEB-INF/tags" %>
 <jsp:useBean id="propertiesBean" scope="request" type="jetbrains.buildServer.controllers.BasePropertiesBean"/>
 <jsp:useBean id="constants" class="io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants"/>
 
@@ -27,4 +25,7 @@
 </div>
 <div class="parameter">
   Additional parameters: <strong><props:displayValue name="${constants.additionalParameters}" emptyValue="none specified"/></strong>
+</div>
+<div class="parameter">
+  Custom build tool path: <strong><props:displayValue name="${constants.customBuildToolPath}" emptyValue="not specified"/></strong>
 </div>
