@@ -28,7 +28,9 @@
   <tr class="advancedSetting">
     <th><label for="${constants.file}.text">File:</label></th>
     <td>
-      <props:textProperty name="${constants.file}" className="longField" id="${constants.file}.text"/>
+      <props:textProperty name="${constants.file}" className="longField" id="${constants.file}.text">
+        <jsp:attribute name="afterTextField"><bs:vcsTree fieldId="${constants.file}.text"/></jsp:attribute>
+      </props:textProperty>
       <span class="smallNote">The path to the manifest file to be used by Snyk.</span>
     </td>
   </tr>
