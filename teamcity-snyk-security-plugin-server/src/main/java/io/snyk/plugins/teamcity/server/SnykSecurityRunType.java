@@ -16,8 +16,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.API_TOKEN;
+import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.CUSTOM_BUILD_TOOL_PATH;
 import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.MONITOR_PROJECT_ON_BUILD;
 import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.SEVERITY_THRESHOLD;
+import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.USE_CUSTOM_BUILD_TOOL_PATH;
 import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.VERSION;
 import static jetbrains.buildServer.util.PropertiesUtil.getBoolean;
 import static jetbrains.buildServer.util.PropertiesUtil.isEmptyOrNull;
@@ -64,6 +66,9 @@ public class SnykSecurityRunType extends RunType {
       }
       if (isEmptyOrNull(properties.get(VERSION))) {
         findings.add(new InvalidProperty(VERSION, "Please define a Snyk version."));
+      }
+      if (getBoolean(properties.get(USE_CUSTOM_BUILD_TOOL_PATH)) && isEmptyOrNull(properties.get(CUSTOM_BUILD_TOOL_PATH))) {
+        findings.add(new InvalidProperty(CUSTOM_BUILD_TOOL_PATH, "Please define a custom build tool path."));
       }
       return findings;
     };

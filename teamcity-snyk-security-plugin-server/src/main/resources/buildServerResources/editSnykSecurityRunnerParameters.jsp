@@ -75,4 +75,37 @@
       <span class="error" id="error_${constants.version}"></span>
     </td>
   </tr>
+  <tr class="advancedSetting">
+    <th><label>Use custom build tool path:</label></th>
+    <td>
+      <props:checkboxProperty name="${constants.useCustomBuildToolPath}"/>
+    </td>
+  </tr>
+  <tr class="advancedSetting" id="${constants.customBuildToolPath}.tr">
+    <th><label for="${constants.customBuildToolPath}.text">Custom build tool path:</label></th>
+    <td>
+      <props:textProperty name="${constants.customBuildToolPath}" className="longField" expandable="true" id="${constants.customBuildToolPath}.text"/>
+      <span class="error" id="error_${constants.customBuildToolPath}"></span>
+    </td>
+  </tr>
 </l:settingsGroup>
+
+<script type="text/javascript">
+  var updateCustomBuildToolPathVisibility = function () {
+    var useCustomBuildToolPath = $('${constants.useCustomBuildToolPath}').checked;
+    var customBuildToolPath = $('${constants.customBuildToolPath}.text');
+    if (useCustomBuildToolPath) {
+      BS.Util.show('${constants.customBuildToolPath}.tr');
+      customBuildToolPath.disabled = false;
+    } else {
+      BS.Util.hide('${constants.customBuildToolPath}.tr');
+      customBuildToolPath.disabled = true;
+      customBuildToolPath.value = "";
+    }
+    BS.VisibilityHandlers.updateVisibility(customBuildToolPath);
+  };
+
+  $j(BS.Util.escapeId("${constants.useCustomBuildToolPath}")).click(updateCustomBuildToolPathVisibility);
+
+  updateCustomBuildToolPathVisibility();
+</script>

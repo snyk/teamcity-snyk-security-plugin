@@ -13,6 +13,8 @@ public final class SnykSecurityRunnerConstants {
   public static final String ADDITIONAL_PARAMETERS = "snyk.additionalParameters";
   public static final String API_TOKEN = "secure:snyk.apiToken";
   public static final String VERSION = "snyk.version";
+  public static final String USE_CUSTOM_BUILD_TOOL_PATH = "snyk.useCustomBuildToolPath";
+  public static final String CUSTOM_BUILD_TOOL_PATH = "snyk.customBuildToolPath";
 
   public String getSeverityThreshold() {
     return SEVERITY_THRESHOLD;
@@ -44,5 +46,13 @@ public final class SnykSecurityRunnerConstants {
 
   public String getVersion() {
     return VERSION;
+  }
+
+  public String getUseCustomBuildToolPath() {
+    return USE_CUSTOM_BUILD_TOOL_PATH;
+  }
+
+  public String getCustomBuildToolPath() {
+    return CUSTOM_BUILD_TOOL_PATH;
   }
 }

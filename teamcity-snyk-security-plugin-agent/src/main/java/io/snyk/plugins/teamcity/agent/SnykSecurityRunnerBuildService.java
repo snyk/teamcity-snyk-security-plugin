@@ -21,14 +21,17 @@ import org.jetbrains.annotations.NotNull;
 
 import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.ADDITIONAL_PARAMETERS;
 import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.API_TOKEN;
+import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.CUSTOM_BUILD_TOOL_PATH;
 import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.FILE;
 import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.ORGANISATION;
 import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.PROJECT_NAME;
 import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.SEVERITY_THRESHOLD;
+import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.USE_CUSTOM_BUILD_TOOL_PATH;
 import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.VERSION;
 import static java.lang.String.format;
 import static java.lang.String.join;
 import static java.util.Arrays.asList;
+import static jetbrains.buildServer.util.PropertiesUtil.getBoolean;
 import static jetbrains.buildServer.util.StringUtil.nullIfEmpty;
 
 public class SnykSecurityRunnerBuildService extends BuildServiceAdapter {
@@ -62,7 +65,7 @@ public class SnykSecurityRunnerBuildService extends BuildServiceAdapter {
     }
     Map<String, String> envVars = new HashMap<>(getEnvironmentVariables());
     envVars.put("SNYK_TOKEN", snykApiToken);
-
+    addCustomBuildPathIfPresent(envVars);
 
     List<String> arguments = buildArguments();
 
@@ -103,5 +106,16 @@ public class SnykSecurityRunnerBuildService extends BuildServiceAdapter {
     }
 
     return arguments;
+  }
+
+  private void addCustomBuildPathIfPresent(@NotNull Map<String, String> envVars) {
+    String useCustomBuildToolPath = getRunnerParameters().get(USE_CUSTOM_BUILD_TOOL_PATH);
+    String customBuildToolPath = getRunnerParameters().get(CUSTOM_BUILD_TOOL_PATH);
+    if (nullIfEmpty(useCustomBuildToolPath) == null && getBoolean(useCustomBuildToolPath)) {
+      //TODO: add tool auto discovery (teamcity.tool.*)
+    } else {
+      String oldPath = envVars.get("PATH");
+      envVars.put("PATH", oldPath + File.pathSeparator + customBuildToolPath);
+    }
   }
 }
