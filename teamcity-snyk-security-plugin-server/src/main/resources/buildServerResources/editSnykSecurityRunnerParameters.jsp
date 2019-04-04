@@ -81,12 +81,15 @@
     <th><label>Use custom build tool path:</label></th>
     <td>
       <props:checkboxProperty name="${constants.useCustomBuildToolPath}"/>
+      <span class="smallNote">If this checkbox is selected, auto-discovery mode will be deactivated and the path to the project's build tool must be specified.</span>
     </td>
   </tr>
   <tr class="advancedSetting" id="${constants.customBuildToolPath}.tr">
     <th><label for="${constants.customBuildToolPath}.text">Custom build tool path:</label></th>
     <td>
       <props:textProperty name="${constants.customBuildToolPath}" className="longField" expandable="true" id="${constants.customBuildToolPath}.text"/>
+      <span class="smallNote">Specify here the path to the build tool used for the project (i.e. <kbd>mvn</kbd> or <kbd>gradle</kbd>).</span>
+      <span class="smallNote">During builds this directory will be added to environment <kbd>PATH</kbd>.</span>
       <span class="error" id="error_${constants.customBuildToolPath}"></span>
     </td>
   </tr>
