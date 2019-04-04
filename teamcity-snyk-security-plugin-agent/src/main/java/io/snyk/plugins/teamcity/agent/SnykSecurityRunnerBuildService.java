@@ -16,6 +16,7 @@ import jetbrains.buildServer.agent.BuildAgentSystemInfo;
 import jetbrains.buildServer.agent.runner.BuildServiceAdapter;
 import jetbrains.buildServer.agent.runner.ProgramCommandLine;
 import jetbrains.buildServer.agent.runner.SimpleProgramCommandLine;
+import jetbrains.buildServer.util.FileUtil;
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
@@ -31,6 +32,7 @@ import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.VERSIO
 import static java.lang.String.format;
 import static java.lang.String.join;
 import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toList;
 import static jetbrains.buildServer.util.PropertiesUtil.getBoolean;
 import static jetbrains.buildServer.util.StringUtil.nullIfEmpty;
 
@@ -65,7 +67,7 @@ public class SnykSecurityRunnerBuildService extends BuildServiceAdapter {
     }
     Map<String, String> envVars = new HashMap<>(getEnvironmentVariables());
     envVars.put("SNYK_TOKEN", snykApiToken);
-    addCustomBuildPathIfPresent(envVars);
+    configureCustomBuildPath(envVars);
 
     List<String> arguments = buildArguments();
 
@@ -108,14 +110,31 @@ public class SnykSecurityRunnerBuildService extends BuildServiceAdapter {
     return arguments;
   }
 
-  private void addCustomBuildPathIfPresent(@NotNull Map<String, String> envVars) {
+  private void configureCustomBuildPath(@NotNull Map<String, String> envVars) {
+    String oldPath = envVars.get("PATH");
     String useCustomBuildToolPath = getRunnerParameters().get(USE_CUSTOM_BUILD_TOOL_PATH);
     String customBuildToolPath = getRunnerParameters().get(CUSTOM_BUILD_TOOL_PATH);
-    if (nullIfEmpty(useCustomBuildToolPath) == null && getBoolean(useCustomBuildToolPath)) {
-      //TODO: add tool auto discovery (teamcity.tool.*)
-    } else {
-      String oldPath = envVars.get("PATH");
+
+    if (getBoolean(useCustomBuildToolPath)) {
+      // manual mode
       envVars.put("PATH", oldPath + File.pathSeparator + customBuildToolPath);
+    } else {
+      // auto-discover mode
+      List<String> defaultToolPaths = getConfigParameters().entrySet().stream()
+                                                           .filter(entry -> entry.getKey().startsWith("teamcity.tool."))
+                                                           .filter(entry -> entry.getKey().contains("DEFAULT"))
+                                                           .map(Map.Entry::getValue)
+                                                           .collect(toList());
+      List<String> toolsPath = new ArrayList<>(defaultToolPaths);
+      defaultToolPaths.forEach(defaultToolPath -> {
+        // should be refactored later, looks like a small overkill add every folder
+        List<File> subDirectoriesInDefaultToolPath = FileUtil.getSubDirectories(Paths.get(defaultToolPath).toFile());
+        subDirectoriesInDefaultToolPath.forEach(entry -> toolsPath.add(entry.getAbsolutePath()));
+      });
+
+      envVars.put("PATH", oldPath + File.pathSeparator + join(File.pathSeparator, toolsPath));
     }
+
+    LOG.info("env.PATH for snyk build step: " + envVars.get("PATH"));
   }
 }
