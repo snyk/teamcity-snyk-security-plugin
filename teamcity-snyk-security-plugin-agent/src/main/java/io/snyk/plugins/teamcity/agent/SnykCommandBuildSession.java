@@ -6,39 +6,39 @@ import java.util.List;
 
 import io.snyk.plugins.teamcity.agent.commands.SnykVersionCommand;
 import jetbrains.buildServer.RunBuildException;
+import jetbrains.buildServer.TeamCityRuntimeException;
 import jetbrains.buildServer.agent.BuildFinishedStatus;
 import jetbrains.buildServer.agent.BuildRunnerContext;
 import jetbrains.buildServer.agent.runner.CommandExecution;
+import jetbrains.buildServer.agent.runner.CommandLineBuildService;
 import jetbrains.buildServer.agent.runner.MultiCommandBuildSession;
-import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.MONITOR_PROJECT_ON_BUILD;
 import static java.util.Objects.requireNonNull;
-import static org.apache.log4j.Logger.getLogger;
 
 public class SnykCommandBuildSession implements MultiCommandBuildSession {
 
-  private static final Logger LOG = getLogger(SnykCommandBuildSession.class);
-
   private final BuildRunnerContext buildRunnerContext;
-  private Iterator<CommandExecution> buildSteps;
+
+  private Iterator<CommandExecutionAdapter> buildSteps;
+  private CommandExecutionAdapter lastCommand;
 
   SnykCommandBuildSession(@NotNull BuildRunnerContext buildRunnerContext) {
     this.buildRunnerContext = requireNonNull(buildRunnerContext);
   }
 
   @Override
-  public void sessionStarted() throws RunBuildException {
-    buildSteps = getSteps();
+  public void sessionStarted() {
+    buildSteps = getBuildSteps();
   }
 
   @Nullable
   @Override
-  public CommandExecution getNextCommand() throws RunBuildException {
+  public CommandExecution getNextCommand() {
     if (buildSteps.hasNext()) {
-      return buildSteps.next();
+      lastCommand = buildSteps.next();
+      return lastCommand;
     }
     return null;
   }
@@ -46,18 +46,24 @@ public class SnykCommandBuildSession implements MultiCommandBuildSession {
   @Nullable
   @Override
   public BuildFinishedStatus sessionFinished() {
-    return BuildFinishedStatus.FINISHED_SUCCESS;
+    return lastCommand.getResult();
   }
 
-  private Iterator<CommandExecution> getSteps() {
-    List<CommandExecution> steps = new ArrayList<>(3);
+  private Iterator<CommandExecutionAdapter> getBuildSteps() {
+    List<CommandExecutionAdapter> steps = new ArrayList<>(3);
 
-    CommandExecution snykVersionCommand = new SnykVersionCommand(buildRunnerContext);
-    steps.add(snykVersionCommand);
-
-    String monitorProjectOnBuild = buildRunnerContext.getRunnerParameters().get(MONITOR_PROJECT_ON_BUILD);
-    LOG.error("monitorProjectOnBuild: " + monitorProjectOnBuild);
+    SnykVersionCommand snykVersionCommand = new SnykVersionCommand();
+    steps.add(addCommand(snykVersionCommand));
 
     return steps.iterator();
+  }
+
+  private CommandExecutionAdapter addCommand(CommandLineBuildService buildService) {
+    try {
+      buildService.initialize(buildRunnerContext.getBuild(), buildRunnerContext);
+    } catch (RunBuildException ex) {
+      throw new TeamCityRuntimeException(ex);
+    }
+    return new CommandExecutionAdapter(buildService);
   }
 }

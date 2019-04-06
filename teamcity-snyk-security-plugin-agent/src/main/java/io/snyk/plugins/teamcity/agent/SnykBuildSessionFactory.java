@@ -1,7 +1,6 @@
 package io.snyk.plugins.teamcity.agent;
 
 import io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants;
-import jetbrains.buildServer.RunBuildException;
 import jetbrains.buildServer.agent.AgentBuildRunnerInfo;
 import jetbrains.buildServer.agent.BuildAgentConfiguration;
 import jetbrains.buildServer.agent.BuildRunnerContext;
@@ -17,7 +16,7 @@ public class SnykBuildSessionFactory implements MultiCommandBuildSessionFactory 
 
   @NotNull
   @Override
-  public MultiCommandBuildSession createSession(@NotNull BuildRunnerContext runnerContext) throws RunBuildException {
+  public MultiCommandBuildSession createSession(@NotNull BuildRunnerContext runnerContext) {
     return new SnykCommandBuildSession(runnerContext);
   }
 
