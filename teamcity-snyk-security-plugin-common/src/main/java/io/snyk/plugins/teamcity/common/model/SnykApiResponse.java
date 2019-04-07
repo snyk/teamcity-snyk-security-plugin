@@ -12,4 +12,7 @@ public class SnykApiResponse {
 
   @JsonProperty("summary")
   public String summary;
+
+  @JsonProperty("uniqueCount")
+  public int uniqueCount;
 }

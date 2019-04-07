@@ -108,10 +108,16 @@ public class CommandExecutionAdapter implements CommandExecution {
       if (exitCode != 0) {
         String commandOutput = new String(Files.readAllBytes(commandOutputPath), UTF_8);
         ObjectMapperHelper.unmarshall(commandOutput, SnykApiResponse.class).ifPresent(snykApiResponse -> {
-          String error = snykApiResponse.error;
+          // "error" indicates a hard error, so declare the build as failed
+          if (nullIfEmpty(snykApiResponse.error) != null) {
+            BuildProblemData buildProblem = createBuildProblem(snykApiResponse.error);
+            buildService.getLogger().logBuildProblem(buildProblem);
+            result = BuildFinishedStatus.FINISHED_FAILED;
+          }
 
-          if (nullIfEmpty(error) != null) {
-            BuildProblemData buildProblem = createBuildProblem(error);
+          if (!snykApiResponse.success && nullIfEmpty(snykApiResponse.summary) != null) {
+            String problem = format("%s known issues | %s", snykApiResponse.uniqueCount, snykApiResponse.summary);
+            BuildProblemData buildProblem = createBuildProblem(problem);
             buildService.getLogger().logBuildProblem(buildProblem);
           }
         });
