@@ -31,5 +31,8 @@ public class SnykVersionCommand extends SnykBuildServiceAdapter {
     getBuild().getBuildLogger().message("Determining Snyk tool version...");
   }
 
-
+  @Override
+  public boolean isCommandLineLoggingEnabled() {
+    return false;
+  }
 }

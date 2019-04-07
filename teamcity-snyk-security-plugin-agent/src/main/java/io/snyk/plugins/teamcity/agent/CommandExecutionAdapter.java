@@ -1,9 +1,14 @@
 package io.snyk.plugins.teamcity.agent;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 
 import jetbrains.buildServer.RunBuildException;
+import jetbrains.buildServer.TeamCityRuntimeException;
 import jetbrains.buildServer.agent.BuildFinishedStatus;
 import jetbrains.buildServer.agent.runner.CommandExecution;
 import jetbrains.buildServer.agent.runner.CommandLineBuildService;
@@ -13,18 +18,22 @@ import jetbrains.buildServer.agent.runner.TerminationAction;
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
+import static java.lang.String.format;
 import static java.util.Objects.requireNonNull;
+import static jetbrains.buildServer.util.StringUtil.nullIfEmpty;
 
 public class CommandExecutionAdapter implements CommandExecution {
 
   private static final Logger LOG = Logger.getLogger(CommandExecutionAdapter.class);
 
-  private CommandLineBuildService buildService;
+  private final CommandLineBuildService buildService;
+  private final Path commandOutput;
   private List<ProcessListener> listeners;
   private BuildFinishedStatus result;
 
-  CommandExecutionAdapter(@NotNull CommandLineBuildService buildService) {
+  CommandExecutionAdapter(@NotNull CommandLineBuildService buildService, @NotNull Path commandOutput) {
     this.buildService = requireNonNull(buildService);
+    this.commandOutput = requireNonNull(commandOutput);
     listeners = buildService.getListeners();
   }
 
@@ -52,7 +61,15 @@ public class CommandExecutionAdapter implements CommandExecution {
 
   @Override
   public void onStandardOutput(@NotNull String text) {
-    listeners.forEach(processListener -> processListener.onStandardOutput(text));
+    if (nullIfEmpty(text) == null) {
+      return;
+    }
+
+    try {
+      Files.write(commandOutput, text.getBytes(StandardCharsets.UTF_8));
+    } catch (IOException ex) {
+      throw new TeamCityRuntimeException(format("Could not write output into '%s'", commandOutput.toString()), ex);
+    }
   }
 
   @Override

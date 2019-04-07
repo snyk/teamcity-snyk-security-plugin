@@ -46,4 +46,9 @@ abstract class SnykBuildServiceAdapter extends BuildServiceAdapter {
       throw new TeamCityRuntimeException("Could not detect OS on build agent: " + getAgentConfiguration().getName());
     }
   }
+
+  @Override
+  public boolean isCommandLineLoggingEnabled() {
+    return false;
+  }
 }

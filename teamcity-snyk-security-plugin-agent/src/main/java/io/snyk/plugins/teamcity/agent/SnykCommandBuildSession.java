@@ -1,5 +1,8 @@
 package io.snyk.plugins.teamcity.agent;
 
+import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -51,19 +54,20 @@ public class SnykCommandBuildSession implements MultiCommandBuildSession {
 
   private Iterator<CommandExecutionAdapter> getBuildSteps() {
     List<CommandExecutionAdapter> steps = new ArrayList<>(3);
+    File buildTempDirectory = buildRunnerContext.getBuild().getBuildTempDirectory();
 
     SnykVersionCommand snykVersionCommand = new SnykVersionCommand();
-    steps.add(addCommand(snykVersionCommand));
+    steps.add(addCommand(snykVersionCommand, Paths.get(buildTempDirectory.getAbsolutePath(), "version.txt")));
 
     return steps.iterator();
   }
 
-  private CommandExecutionAdapter addCommand(CommandLineBuildService buildService) {
+  private CommandExecutionAdapter addCommand(CommandLineBuildService buildService, Path commandOutput) {
     try {
       buildService.initialize(buildRunnerContext.getBuild(), buildRunnerContext);
     } catch (RunBuildException ex) {
       throw new TeamCityRuntimeException(ex);
     }
-    return new CommandExecutionAdapter(buildService);
+    return new CommandExecutionAdapter(buildService, commandOutput);
   }
 }
