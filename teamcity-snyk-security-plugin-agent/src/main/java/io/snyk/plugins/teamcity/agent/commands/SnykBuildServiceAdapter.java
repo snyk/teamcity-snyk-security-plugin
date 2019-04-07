@@ -9,7 +9,9 @@ import io.snyk.plugins.teamcity.common.runner.RunnerVersion;
 import io.snyk.plugins.teamcity.common.runner.Runners;
 import jetbrains.buildServer.TeamCityRuntimeException;
 import jetbrains.buildServer.agent.BuildAgentSystemInfo;
+import jetbrains.buildServer.agent.BuildFinishedStatus;
 import jetbrains.buildServer.agent.runner.BuildServiceAdapter;
+import org.jetbrains.annotations.NotNull;
 
 import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.VERSION;
 import static java.lang.String.format;
@@ -50,5 +52,14 @@ abstract class SnykBuildServiceAdapter extends BuildServiceAdapter {
   @Override
   public boolean isCommandLineLoggingEnabled() {
     return true;
+  }
+
+  @NotNull
+  @Override
+  public BuildFinishedStatus getRunResult(int exitCode) {
+    if (exitCode == 0) {
+      return BuildFinishedStatus.FINISHED_SUCCESS;
+    }
+    return getBuild().getFailBuildOnExitCode() ? BuildFinishedStatus.FINISHED_WITH_PROBLEMS : BuildFinishedStatus.FINISHED_SUCCESS;
   }
 }

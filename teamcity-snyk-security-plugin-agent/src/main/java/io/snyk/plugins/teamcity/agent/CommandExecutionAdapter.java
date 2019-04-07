@@ -20,13 +20,13 @@ import jetbrains.buildServer.agent.runner.TerminationAction;
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
+import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.RUNNER_DISPLAY_NAME;
 import static java.lang.String.format;
 import static java.lang.String.valueOf;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.nio.file.StandardOpenOption.APPEND;
 import static java.nio.file.StandardOpenOption.CREATE;
 import static java.util.Objects.requireNonNull;
-import static jetbrains.buildServer.BuildProblemData.createBuildProblem;
 import static jetbrains.buildServer.BuildProblemTypes.TC_ERROR_MESSAGE_TYPE;
 import static jetbrains.buildServer.util.StringUtil.nullIfEmpty;
 
@@ -111,7 +111,7 @@ public class CommandExecutionAdapter implements CommandExecution {
           String error = snykApiResponse.error;
 
           if (nullIfEmpty(error) != null) {
-            BuildProblemData buildProblem = createBuildProblem(valueOf(error.hashCode()), TC_ERROR_MESSAGE_TYPE, error);
+            BuildProblemData buildProblem = createBuildProblem(error);
             buildService.getLogger().logBuildProblem(buildProblem);
           }
         });
@@ -119,5 +119,10 @@ public class CommandExecutionAdapter implements CommandExecution {
     } catch (RunBuildException | IOException ex) {
       LOG.error(ex);
     }
+  }
+
+  private BuildProblemData createBuildProblem(@NotNull String description) {
+    String error = format("%s (Step: %s)", description, RUNNER_DISPLAY_NAME);
+    return BuildProblemData.createBuildProblem(valueOf(description.hashCode()), TC_ERROR_MESSAGE_TYPE, error);
   }
 }
