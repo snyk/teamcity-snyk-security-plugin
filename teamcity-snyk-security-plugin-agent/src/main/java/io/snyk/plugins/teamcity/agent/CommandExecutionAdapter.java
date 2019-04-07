@@ -123,6 +123,7 @@ public class CommandExecutionAdapter implements CommandExecution {
         });
       }
     } catch (RunBuildException | IOException ex) {
+      buildService.getLogger().warning(ex.getMessage());
       LOG.error(ex);
     }
   }
