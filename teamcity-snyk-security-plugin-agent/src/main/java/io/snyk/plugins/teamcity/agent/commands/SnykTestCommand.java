@@ -1,19 +1,14 @@
-package io.snyk.plugins.teamcity.agent;
+package io.snyk.plugins.teamcity.agent.commands;
 
 import java.io.File;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import io.snyk.plugins.teamcity.common.runner.Platform;
-import io.snyk.plugins.teamcity.common.runner.RunnerVersion;
-import io.snyk.plugins.teamcity.common.runner.Runners;
+import io.snyk.plugins.teamcity.agent.CommandExecutionAdapter;
 import jetbrains.buildServer.RunBuildException;
-import jetbrains.buildServer.agent.BuildAgentSystemInfo;
-import jetbrains.buildServer.agent.runner.BuildServiceAdapter;
 import jetbrains.buildServer.agent.runner.ProgramCommandLine;
 import jetbrains.buildServer.agent.runner.SimpleProgramCommandLine;
 import jetbrains.buildServer.util.FileUtil;
@@ -28,38 +23,20 @@ import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.ORGANI
 import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.PROJECT_NAME;
 import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.SEVERITY_THRESHOLD;
 import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.USE_CUSTOM_BUILD_TOOL_PATH;
-import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.VERSION;
-import static java.lang.String.format;
 import static java.lang.String.join;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static jetbrains.buildServer.util.PropertiesUtil.getBoolean;
 import static jetbrains.buildServer.util.StringUtil.nullIfEmpty;
 
-public class SnykSecurityRunnerBuildService extends BuildServiceAdapter {
+public class SnykTestCommand extends SnykBuildServiceAdapter {
 
-  private static final Logger LOG = Logger.getLogger(SnykSecurityRunnerBuildService.class);
+  private static final Logger LOG = Logger.getLogger(CommandExecutionAdapter.class);
 
   @NotNull
   @Override
   public ProgramCommandLine makeProgramCommandLine() throws RunBuildException {
-    Platform platform = null;
-    BuildAgentSystemInfo buildAgentSystemInfo = getAgentConfiguration().getSystemInfo();
-    if (buildAgentSystemInfo.isUnix()) {
-      platform = Platform.LINUX;
-    } else if (buildAgentSystemInfo.isMac()) {
-      platform = Platform.MAC_OS;
-    } else if (buildAgentSystemInfo.isWindows()) {
-      platform = Platform.WINDOWS;
-    }
-
-    File agentToolsDirectory = getAgentConfiguration().getAgentToolsDirectory();
-    String version = getRunnerParameters().get(VERSION);
-    RunnerVersion runner = Runners.getRunner(version);
-    if (runner == null) {
-      throw new RunBuildException(format("Snyk Security runner with version '%s' was not found. Please configure the build properly and retry.", version));
-    }
-    Path snykToolPath = Paths.get(agentToolsDirectory.getAbsolutePath(), "teamcity-snyk-security-plugin-runner", "bin", version, runner.getSnykToolPath(platform));
+    String snykToolPath = getSnykToolPath();
 
     String snykApiToken = getRunnerParameters().get(API_TOKEN);
     if (nullIfEmpty(snykApiToken) == null) {
@@ -69,14 +46,17 @@ public class SnykSecurityRunnerBuildService extends BuildServiceAdapter {
     envVars.put("SNYK_TOKEN", snykApiToken);
     configureCustomBuildPath(envVars);
 
-    List<String> arguments = buildArguments();
-
-    return new SimpleProgramCommandLine(envVars, getCheckoutDirectory().getAbsolutePath(), snykToolPath.toString(), arguments);
+    return new SimpleProgramCommandLine(envVars, getWorkingDirectory().getAbsolutePath(), snykToolPath, getArguments());
   }
 
-  @NotNull
-  private List<String> buildArguments() {
-    List<String> arguments = new ArrayList<>();
+  @Override
+  public void beforeProcessStarted() {
+    getBuild().getBuildLogger().message("Testing for known issues...");
+  }
+
+  @Override
+  List<String> getArguments() {
+    List<String> arguments = new java.util.ArrayList<>();
     arguments.add("test");
     arguments.add("--json");
 
@@ -101,10 +81,6 @@ public class SnykSecurityRunnerBuildService extends BuildServiceAdapter {
     String additionalParameters = getRunnerParameters().get(ADDITIONAL_PARAMETERS);
     if (nullIfEmpty(additionalParameters) != null) {
       arguments.addAll(asList(additionalParameters.split("\\s+")));
-    }
-
-    if (LOG.isDebugEnabled()) {
-      LOG.debug(format("Runner arguments: {%s}", join(",", arguments)));
     }
 
     return arguments;

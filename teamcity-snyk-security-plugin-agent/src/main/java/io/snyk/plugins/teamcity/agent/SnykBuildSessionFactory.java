@@ -3,20 +3,21 @@ package io.snyk.plugins.teamcity.agent;
 import io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants;
 import jetbrains.buildServer.agent.AgentBuildRunnerInfo;
 import jetbrains.buildServer.agent.BuildAgentConfiguration;
-import jetbrains.buildServer.agent.runner.CommandLineBuildService;
-import jetbrains.buildServer.agent.runner.CommandLineBuildServiceFactory;
+import jetbrains.buildServer.agent.BuildRunnerContext;
+import jetbrains.buildServer.agent.runner.MultiCommandBuildSession;
+import jetbrains.buildServer.agent.runner.MultiCommandBuildSessionFactory;
 import org.jetbrains.annotations.NotNull;
 
-public class SnykSecurityBuildServiceFactory implements CommandLineBuildServiceFactory {
+public class SnykBuildSessionFactory implements MultiCommandBuildSessionFactory {
 
-  public SnykSecurityBuildServiceFactory() {
+  public SnykBuildSessionFactory() {
     // initialized by spring
   }
 
   @NotNull
   @Override
-  public CommandLineBuildService createService() {
-    return new SnykSecurityRunnerBuildService();
+  public MultiCommandBuildSession createSession(@NotNull BuildRunnerContext runnerContext) {
+    return new SnykCommandBuildSession(runnerContext);
   }
 
   @NotNull
