@@ -22,11 +22,6 @@ public class SnykVersionCommand extends SnykBuildServiceAdapter {
   }
 
   @Override
-  List<String> getArguments() {
-    return singletonList("--version");
-  }
-
-  @Override
   public void beforeProcessStarted() {
     getBuild().getBuildLogger().message("Determining Snyk tool version...");
   }
@@ -34,5 +29,10 @@ public class SnykVersionCommand extends SnykBuildServiceAdapter {
   @Override
   public boolean isCommandLineLoggingEnabled() {
     return false;
+  }
+
+  @Override
+  List<String> getArguments() {
+    return singletonList("--version");
   }
 }

@@ -2,11 +2,13 @@ package io.snyk.plugins.teamcity.agent;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
+import io.snyk.plugins.teamcity.common.ObjectMapperHelper;
+import io.snyk.plugins.teamcity.common.model.SnykApiResponse;
+import jetbrains.buildServer.BuildProblemData;
 import jetbrains.buildServer.RunBuildException;
 import jetbrains.buildServer.TeamCityRuntimeException;
 import jetbrains.buildServer.agent.BuildFinishedStatus;
@@ -19,7 +21,13 @@ import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import static java.lang.String.format;
+import static java.lang.String.valueOf;
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.nio.file.StandardOpenOption.APPEND;
+import static java.nio.file.StandardOpenOption.CREATE;
 import static java.util.Objects.requireNonNull;
+import static jetbrains.buildServer.BuildProblemData.createBuildProblem;
+import static jetbrains.buildServer.BuildProblemTypes.TC_ERROR_MESSAGE_TYPE;
 import static jetbrains.buildServer.util.StringUtil.nullIfEmpty;
 
 public class CommandExecutionAdapter implements CommandExecution {
@@ -27,14 +35,19 @@ public class CommandExecutionAdapter implements CommandExecution {
   private static final Logger LOG = Logger.getLogger(CommandExecutionAdapter.class);
 
   private final CommandLineBuildService buildService;
-  private final Path commandOutput;
+  private final Path commandOutputPath;
   private List<ProcessListener> listeners;
   private BuildFinishedStatus result;
 
-  CommandExecutionAdapter(@NotNull CommandLineBuildService buildService, @NotNull Path commandOutput) {
+  CommandExecutionAdapter(@NotNull CommandLineBuildService buildService, @NotNull Path commandOutputPath) {
     this.buildService = requireNonNull(buildService);
-    this.commandOutput = requireNonNull(commandOutput);
+    this.commandOutputPath = requireNonNull(commandOutputPath);
     listeners = buildService.getListeners();
+  }
+
+  @NotNull
+  BuildFinishedStatus getResult() {
+    return result;
   }
 
   @NotNull
@@ -66,9 +79,9 @@ public class CommandExecutionAdapter implements CommandExecution {
     }
 
     try {
-      Files.write(commandOutput, text.getBytes(StandardCharsets.UTF_8));
+      Files.write(commandOutputPath, text.getBytes(UTF_8), CREATE, APPEND);
     } catch (IOException ex) {
-      throw new TeamCityRuntimeException(format("Could not write output into '%s'", commandOutput.toString()), ex);
+      throw new TeamCityRuntimeException(format("Could not write output into '%s'", commandOutputPath.toString()), ex);
     }
   }
 
@@ -86,19 +99,25 @@ public class CommandExecutionAdapter implements CommandExecution {
   public void processFinished(int exitCode) {
     try {
       buildService.afterProcessFinished();
-
-      buildService.getListeners().forEach(listener -> listener.processFinished(exitCode));
+      listeners.forEach(processListener -> processListener.processFinished(exitCode));
       result = buildService.getRunResult(exitCode);
       if (result == BuildFinishedStatus.FINISHED_SUCCESS) {
         buildService.afterProcessSuccessfullyFinished();
       }
-    } catch (RunBuildException ex) {
+
+      if (exitCode != 0) {
+        String commandOutput = new String(Files.readAllBytes(commandOutputPath), UTF_8);
+        ObjectMapperHelper.unmarshall(commandOutput, SnykApiResponse.class).ifPresent(snykApiResponse -> {
+          String error = snykApiResponse.error;
+
+          if (nullIfEmpty(error) != null) {
+            BuildProblemData buildProblem = createBuildProblem(valueOf(error.hashCode()), TC_ERROR_MESSAGE_TYPE, error);
+            buildService.getLogger().logBuildProblem(buildProblem);
+          }
+        });
+      }
+    } catch (RunBuildException | IOException ex) {
       LOG.error(ex);
     }
-  }
-
-  @NotNull
-  BuildFinishedStatus getResult() {
-    return result;
   }
 }

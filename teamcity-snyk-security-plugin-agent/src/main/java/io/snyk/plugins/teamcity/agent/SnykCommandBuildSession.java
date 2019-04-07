@@ -1,13 +1,12 @@
 package io.snyk.plugins.teamcity.agent;
 
-import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import io.snyk.plugins.teamcity.agent.commands.SnykVersionCommand;
+import io.snyk.plugins.teamcity.agent.commands.SnykTestCommand;
 import jetbrains.buildServer.RunBuildException;
 import jetbrains.buildServer.TeamCityRuntimeException;
 import jetbrains.buildServer.agent.BuildFinishedStatus;
@@ -18,6 +17,7 @@ import jetbrains.buildServer.agent.runner.MultiCommandBuildSession;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.SNYK_REPORT_JSON_FILE;
 import static java.util.Objects.requireNonNull;
 
 public class SnykCommandBuildSession implements MultiCommandBuildSession {
@@ -54,20 +54,24 @@ public class SnykCommandBuildSession implements MultiCommandBuildSession {
 
   private Iterator<CommandExecutionAdapter> getBuildSteps() {
     List<CommandExecutionAdapter> steps = new ArrayList<>(3);
-    File buildTempDirectory = buildRunnerContext.getBuild().getBuildTempDirectory();
+    String buildTempDirectory = buildRunnerContext.getBuild().getBuildTempDirectory().getAbsolutePath();
 
-    SnykVersionCommand snykVersionCommand = new SnykVersionCommand();
-    steps.add(addCommand(snykVersionCommand, Paths.get(buildTempDirectory.getAbsolutePath(), "version.txt")));
+    // Disable for development process
+    // SnykVersionCommand snykVersionCommand = new SnykVersionCommand();
+    // steps.add(addCommand(snykVersionCommand, Paths.get(buildTempDirectory, "version.txt")));
+
+    SnykTestCommand snykTestCommand = new SnykTestCommand();
+    steps.add(addCommand(snykTestCommand, Paths.get(buildTempDirectory, SNYK_REPORT_JSON_FILE)));
 
     return steps.iterator();
   }
 
-  private CommandExecutionAdapter addCommand(CommandLineBuildService buildService, Path commandOutput) {
+  private CommandExecutionAdapter addCommand(CommandLineBuildService buildService, Path commandOutputPath) {
     try {
       buildService.initialize(buildRunnerContext.getBuild(), buildRunnerContext);
     } catch (RunBuildException ex) {
       throw new TeamCityRuntimeException(ex);
     }
-    return new CommandExecutionAdapter(buildService, commandOutput);
+    return new CommandExecutionAdapter(buildService, commandOutputPath);
   }
 }

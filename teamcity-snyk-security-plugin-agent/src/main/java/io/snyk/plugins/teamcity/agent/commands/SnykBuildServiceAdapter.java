@@ -49,6 +49,6 @@ abstract class SnykBuildServiceAdapter extends BuildServiceAdapter {
 
   @Override
   public boolean isCommandLineLoggingEnabled() {
-    return false;
+    return true;
   }
 }
