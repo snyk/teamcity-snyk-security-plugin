@@ -29,7 +29,7 @@ import static java.util.stream.Collectors.toList;
 import static jetbrains.buildServer.util.PropertiesUtil.getBoolean;
 import static jetbrains.buildServer.util.StringUtil.nullIfEmpty;
 
-public class SnykTestCommand extends SnykBuildServiceAdapter {
+public class SnykMonitorCommand extends SnykBuildServiceAdapter {
 
   private static final Logger LOG = Logger.getLogger(CommandExecutionAdapter.class);
 
@@ -51,13 +51,13 @@ public class SnykTestCommand extends SnykBuildServiceAdapter {
 
   @Override
   public void beforeProcessStarted() {
-    getBuild().getBuildLogger().message("Testing for known issues...");
+    getBuild().getBuildLogger().message("Remember project for continuous monitoring...");
   }
 
   @Override
   List<String> getArguments() {
     List<String> arguments = new ArrayList<>();
-    arguments.add("test");
+    arguments.add("monitor");
     arguments.add("--json");
 
     String severityThreshold = getRunnerParameters().getOrDefault(SEVERITY_THRESHOLD, "low");

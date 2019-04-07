@@ -16,7 +16,8 @@ public final class SnykSecurityRunnerConstants {
   public static final String USE_CUSTOM_BUILD_TOOL_PATH = "snyk.useCustomBuildToolPath";
   public static final String CUSTOM_BUILD_TOOL_PATH = "snyk.customBuildToolPath";
 
-  public static final String SNYK_REPORT_JSON_FILE = "snyk_report.json";
+  public static final String SNYK_TEST_REPORT_JSON_FILE = "snyk_report.json";
+  public static final String SNYK_MONITOR_REPORT_JSON_FILE = "snyk_monitor_report.json";
   public static final String SNYK_REPORT_HTML_FILE = "snyk_report.html";
 
   public String getSeverityThreshold() {
