@@ -36,6 +36,22 @@ abstract class SnykBuildServiceAdapter extends BuildServiceAdapter {
     return snykToolPath.toString();
   }
 
+  String getReportMapperPath() {
+    String version = getRunnerParameters().get(VERSION);
+    RunnerVersion runner = Runners.getRunner(version);
+    if (runner == null) {
+      throw new TeamCityRuntimeException(format("Snyk Security runner with version '%s' was not found. Please configure the build properly and retry.", version));
+    }
+
+    String agentToolsDirectory = getAgentConfiguration().getAgentToolsDirectory().getAbsolutePath();
+    Platform platform = detectAgentPlatform();
+    Path reportMapperPath = Paths.get(agentToolsDirectory, "teamcity-snyk-security-plugin-runner", "bin", version, runner.getReportMapperPath(platform));
+    if (!reportMapperPath.toFile().exists()) {
+      throw new TeamCityRuntimeException(format("Could not found '%s'", reportMapperPath.toString()));
+    }
+    return reportMapperPath.toString();
+  }
+
   private Platform detectAgentPlatform() {
     BuildAgentSystemInfo buildAgentSystemInfo = getAgentConfiguration().getSystemInfo();
     if (buildAgentSystemInfo.isUnix()) {

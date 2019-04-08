@@ -7,11 +7,13 @@ import java.util.Iterator;
 import java.util.List;
 
 import io.snyk.plugins.teamcity.agent.commands.SnykMonitorCommand;
+import io.snyk.plugins.teamcity.agent.commands.SnykReportCommand;
 import io.snyk.plugins.teamcity.agent.commands.SnykTestCommand;
 import jetbrains.buildServer.RunBuildException;
 import jetbrains.buildServer.TeamCityRuntimeException;
 import jetbrains.buildServer.agent.BuildFinishedStatus;
 import jetbrains.buildServer.agent.BuildRunnerContext;
+import jetbrains.buildServer.agent.artifacts.ArtifactsWatcher;
 import jetbrains.buildServer.agent.runner.CommandExecution;
 import jetbrains.buildServer.agent.runner.CommandLineBuildService;
 import jetbrains.buildServer.agent.runner.MultiCommandBuildSession;
@@ -20,18 +22,21 @@ import org.jetbrains.annotations.Nullable;
 
 import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.MONITOR_PROJECT_ON_BUILD;
 import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.SNYK_MONITOR_REPORT_JSON_FILE;
+import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.SNYK_REPORT_HTML_FILE;
 import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.SNYK_TEST_REPORT_JSON_FILE;
 import static java.util.Objects.requireNonNull;
 import static jetbrains.buildServer.util.PropertiesUtil.getBoolean;
 
 public class SnykCommandBuildSession implements MultiCommandBuildSession {
 
+  private final ArtifactsWatcher artifactsWatcher;
   private final BuildRunnerContext buildRunnerContext;
 
   private Iterator<CommandExecutionAdapter> buildSteps;
   private CommandExecutionAdapter lastCommand;
 
-  SnykCommandBuildSession(@NotNull BuildRunnerContext buildRunnerContext) {
+  SnykCommandBuildSession(@NotNull ArtifactsWatcher artifactsWatcher, @NotNull BuildRunnerContext buildRunnerContext) {
+    this.artifactsWatcher = artifactsWatcher;
     this.buildRunnerContext = requireNonNull(buildRunnerContext);
   }
 
@@ -53,6 +58,10 @@ public class SnykCommandBuildSession implements MultiCommandBuildSession {
   @Nullable
   @Override
   public BuildFinishedStatus sessionFinished() {
+    String buildTempDirectory = buildRunnerContext.getBuild().getBuildTempDirectory().getAbsolutePath();
+    Path snykReportHtml = Paths.get(buildTempDirectory, SNYK_REPORT_HTML_FILE);
+    artifactsWatcher.addNewArtifactsPath(snykReportHtml.toAbsolutePath().toString());
+
     return lastCommand.getResult();
   }
 
@@ -72,6 +81,9 @@ public class SnykCommandBuildSession implements MultiCommandBuildSession {
       SnykMonitorCommand snykMonitorCommand = new SnykMonitorCommand();
       steps.add(addCommand(snykMonitorCommand, Paths.get(buildTempDirectory, SNYK_MONITOR_REPORT_JSON_FILE)));
     }
+
+    SnykReportCommand snykReportCommand = new SnykReportCommand();
+    steps.add(addCommand(snykReportCommand, Paths.get(buildTempDirectory, "report.output")));
 
     return steps.iterator();
   }
