@@ -1,0 +1,13 @@
+sudo: false
+language: java
+
+jdk:
+  - openjdk8
+
+cache:
+  directories:
+    - "$HOME/.m2/repository"
+    - "$HOME/.m2/wrapper"
+
+install: true
+script: ./mvnw verify --show-version --batch-mode --errors
