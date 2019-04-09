@@ -5,6 +5,13 @@
       <executable-files>
         <include name="bin/1.143.1/snyk-linux"/>
         <include name="bin/1.143.1/snyk-to-html-linux"/>
+
+        <include name="bin/1.149.0/snyk-linux"/>
+        <include name="bin/1.149.0/snyk-macos"/>
+        <include name="bin/1.149.0/snyk-win.exe"/>
+        <include name="bin/1.149.0/snyk-to-html-linux"/>
+        <include name="bin/1.149.0/snyk-to-html-macos"/>
+        <include name="bin/1.149.0/snyk-to-html-win.exe"/>
       </executable-files>
     </layout>
   </tool-deployment>
