@@ -32,6 +32,23 @@ public final class Runners {
         return "snyk-to-html-" + platform.getSuffix();
       }
     });
+    AVAILABLE_RUNNERS.put("1.149.0", new RunnerVersion("1.149.0", new HashSet<>(asList(LINUX, MAC_OS, WINDOWS))) {
+      @Override
+      public String getSnykToolPath(Platform platform) {
+        if (platform == null) {
+          return "snyk-linux";
+        }
+        return "snyk-" + platform.getSuffix();
+      }
+
+      @Override
+      public String getReportMapperPath(Platform platform) {
+        if (platform == null) {
+          return "snyk-to-html-linux";
+        }
+        return "snyk-to-html-" + platform.getSuffix();
+      }
+    });
   }
 
   public static RunnerVersion getRunner(String version) {
