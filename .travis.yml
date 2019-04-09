@@ -9,5 +9,21 @@ cache:
     - "$HOME/.m2/repository"
     - "$HOME/.m2/wrapper"
 
+notifications:
+  email: false
+
 install: true
 script: ./mvnw verify --show-version --batch-mode --errors
+
+before_deploy: "cd distribution/target && sha256sum teamcity-snyk-security-plugin.zip > teamcity-snyk-security-plugin.zip.sha256"
+deploy:
+  provider: releases
+  api_key:
+    secure: <INSERT-TOKEN-HERE>
+  file:
+    - distribution/target/teamcity-snyk-security-plugin.zip
+    - distribution/target/teamcity-snyk-security-plugin.zip.sha256
+  skip_cleanup: true
+  on:
+    repo: snyk/teamcity-snyk-security-plugin
+    tags: true
