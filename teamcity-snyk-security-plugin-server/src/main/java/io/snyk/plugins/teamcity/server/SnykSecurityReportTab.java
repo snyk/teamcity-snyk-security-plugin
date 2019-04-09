@@ -37,7 +37,7 @@ public class SnykSecurityReportTab extends ViewLogTab {
   @Override
   protected boolean isAvailable(@NotNull HttpServletRequest request, @NotNull SBuild build) {
     SBuildType buildType = build.getBuildType();
-    if (buildType == null) {
+    if (buildType == null || !build.isFinished()) {
       return false;
     }
     return buildType.getRunnerTypes().contains(SnykSecurityRunnerConstants.RUNNER_TYPE);
