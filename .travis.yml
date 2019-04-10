@@ -19,7 +19,7 @@ before_deploy: "cd distribution/target && sha256sum teamcity-snyk-security-plugi
 deploy:
   provider: releases
   api_key:
-    secure: <INSERT-TOKEN-HERE>
+    secure: "Yhb42yFDgnFHamGg9cBAp4Q5r7piVc/7aFBMqV7v8pf0CQXsRcY/B2U3k4M8gcZtoVv2LKax3X6tRc7S2hvc9jGqnyqiXQ0u1zZ8WQlB+ePfSstgt8XGi3IjnFjC9utEX4kh90AuGgIzSI4GKHZoKZ/35QHIKs88AjOHHgUGwETYoVFGrWJEZluLbhnyQWN4hFBV0bFOA8uGFezqiqMW4g0f8fu0N0pkRFWvv4Gh4Hg/q5T/aybEwfdzFKvmQ55gG5C2q1WASLZFPzSacpfDHJAEijU4j8RgGnPvnyr+JBTxBfsNkO6QJnNBxy3gl1UddZ4LJE1xca4gUStUWC+XiQBOM7qwUTSVfCVokhw7iSujnzHCi1gdYrN2Vugd2y6GXOTH1KBJOl+gRheoEn98ucIKrSG57XiHxFCZtyERt1rgzs74C4ld5BxKsdhBPXvG9OfMPrEolKDkrSr9cPRIifVuQzU8Ee+DsvLvHFUiYnMc/2RaV5oBgKA8wXWBaSvzKcXnJ6hTOx6+DdEuvda5Fqa0ooK3+gzEt8bGecsf/EmJ5Mvclwrez8tQK2weslaZZ+2k9GQzKu9z/USucr91NclPgXokVtX4J5iws9LnTrs/L1U9V/9aRcKncNATV8sJkPWL3poxqZl0UAybHEMKZR29T47AoPDRL6w6BchcQMk="
   file:
     - distribution/target/teamcity-snyk-security-plugin.zip
     - distribution/target/teamcity-snyk-security-plugin.zip.sha256
