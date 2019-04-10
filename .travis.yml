@@ -9,7 +9,7 @@ cache:
 notifications:
   email: false
 install: true
-script: "./mvnw clean verify --show-version --batch-mode --errors"
+script: ./mvnw verify --show-version --batch-mode --errors
 before_deploy: "cd distribution/target && sha256sum teamcity-snyk-security-plugin.zip > teamcity-snyk-security-plugin.zip.sha256"
 deploy:
   provider: releases
