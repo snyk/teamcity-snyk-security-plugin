@@ -9,6 +9,21 @@
 
   <name>Snyk Security: Aggregator</name>
 
+ <issueManagement>
+    <system>GitHub Issues</system>
+    <url>https://github.com/snyk/teamcity-snyk-security-plugin/issues</url>
+  </issueManagement>
+  <ciManagement>
+    <system>Travis CI</system>
+    <url>https://travis-ci.com/snyk/teamcity-snyk-security-plugin</url>
+  </ciManagement>
+  <licenses>
+    <license>
+      <name>Apache License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+    </license>
+  </licenses>
+  
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.build.resourceEncoding>UTF-8</project.build.resourceEncoding>
