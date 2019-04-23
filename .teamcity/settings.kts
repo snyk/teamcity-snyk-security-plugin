@@ -27,7 +27,6 @@ To debug in IntelliJ Idea, open the 'Maven Projects' tool window (View
 version = "2018.2"
 
 project {
-
     buildType(Build)
 }
 
@@ -44,8 +43,9 @@ object Build : BuildType({
         maven {
             goals = "clean package"
             runnerArgs = "-Dmaven.test.failure.ignore=true"
-            mavenVersion = defaultProvidedVersion()
-            param("org.jfrog.artifactory.selectedDeployableServer.defaultModuleVersionConfiguration", "GLOBAL")
+            mavenVersion = custom {
+                path = "%teamcity.tool.maven.3.5.2%"
+            }
         }
     }
 
