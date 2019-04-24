@@ -21,13 +21,23 @@ before_deploy:
   - sha256sum teamcity-snyk-security-plugin.zip > teamcity-snyk-security-plugin.zip.sha256
   - cd $TRAVIS_BUILD_DIR
 deploy:
-  provider: releases
-  api_key:
-    secure: Wtq5M5i2CbkpfiF3ZRzqWWlWk7ofn45TuXszeIHlz5ZpiipkEfGp/2+tc5eGJk3tq7fVRcfB0S9a7NzSyEOwwK7MqcQr8ydzAMFDJ8kdOM7zfyhoPlRt2CGoxJvqhowmU7e5nkLtyJrewS1d1k0lcqmpD85JMVykcaIDWciJ3whARwld6Gvg7EHt5dfFrEuNLeQgxI/q+ASPne52MfGC61euL9ippq2Pw3N4xEmRQzUDVsz4fpJIQrNg3nRNqMdVBC/L6If9ph1I3WKCbyaZBXsqz8sKWuOd+7zGwaQJCd4/Muplo4N2J7AI5Uespr8dUn97j7TuYsqFmwlCOfWUn/iRVKWGfrucPWbelNdXVbRBKXF4einGOnsf9UYyb9XI3Z9R4nMN19B+DHKGsKQL08v2FDyIO0au40XgWUza8cq5+hEFpVuc3i353cEVUCCVhvnLKyYGkX+07HL+bVDBI4h9PZRH/iM6QsigrXuC200Ss8hyZ4/7miJK7RwhrKQTTcZgtM7M5yahaVjtn/hpgstdDH/5RruCri7/qRwgAtfvgNLcC4mnpqHbfhHvhGRDJikOmInJnCiW9T6q3gmCaZqoRoPGkywToYxQDDbmw039/diy/09GK/JjmZOFSZJ1w9mH+ESjGRcK2bZxpThzDCdkbqTkQ77e/AHcCR+y/CA=
-  file:
-    - distribution/target/teamcity-snyk-security-plugin.zip
-    - distribution/target/teamcity-snyk-security-plugin.zip.sha256
-  skip_cleanup: true
-  on:
-    repo: snyk/teamcity-snyk-security-plugin
-    tags: true
+  # GitHub releases
+  - provider: releases
+    api_key:
+      secure: Wtq5M5i2CbkpfiF3ZRzqWWlWk7ofn45TuXszeIHlz5ZpiipkEfGp/2+tc5eGJk3tq7fVRcfB0S9a7NzSyEOwwK7MqcQr8ydzAMFDJ8kdOM7zfyhoPlRt2CGoxJvqhowmU7e5nkLtyJrewS1d1k0lcqmpD85JMVykcaIDWciJ3whARwld6Gvg7EHt5dfFrEuNLeQgxI/q+ASPne52MfGC61euL9ippq2Pw3N4xEmRQzUDVsz4fpJIQrNg3nRNqMdVBC/L6If9ph1I3WKCbyaZBXsqz8sKWuOd+7zGwaQJCd4/Muplo4N2J7AI5Uespr8dUn97j7TuYsqFmwlCOfWUn/iRVKWGfrucPWbelNdXVbRBKXF4einGOnsf9UYyb9XI3Z9R4nMN19B+DHKGsKQL08v2FDyIO0au40XgWUza8cq5+hEFpVuc3i353cEVUCCVhvnLKyYGkX+07HL+bVDBI4h9PZRH/iM6QsigrXuC200Ss8hyZ4/7miJK7RwhrKQTTcZgtM7M5yahaVjtn/hpgstdDH/5RruCri7/qRwgAtfvgNLcC4mnpqHbfhHvhGRDJikOmInJnCiW9T6q3gmCaZqoRoPGkywToYxQDDbmw039/diy/09GK/JjmZOFSZJ1w9mH+ESjGRcK2bZxpThzDCdkbqTkQ77e/AHcCR+y/CA=
+    file:
+      - distribution/target/teamcity-snyk-security-plugin.zip
+      - distribution/target/teamcity-snyk-security-plugin.zip.sha256
+    skip_cleanup: true
+    on:
+      repo: snyk/teamcity-snyk-security-plugin
+      tags: true
+  # JetBrains plugin portal
+  - provider: script
+    script: >-
+      echo "Deploying the plugin to JetBrains Portal..." &&
+      curl -i --header "Authorization: Bearer $JETBRAINS_PUBLISH_TOKEN" -F pluginId=12227 -F file=@distribution/target/teamcity-snyk-security-plugin.zip https://plugins.jetbrains.com/plugin/uploadPlugin
+    skip_cleanup: true
+    on:
+      repo: snyk/teamcity-snyk-security-plugin
+      tags: true
