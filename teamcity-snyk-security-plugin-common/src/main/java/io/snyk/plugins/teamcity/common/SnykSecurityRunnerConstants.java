@@ -5,16 +5,16 @@ public final class SnykSecurityRunnerConstants {
   public static final String RUNNER_DISPLAY_NAME = "Snyk Security";
   public static final String RUNNER_DESCRIPTION = "Runner for finding vulnerabilities in your dependencies";
 
-  public static final String SEVERITY_THRESHOLD = "snyk.severityThreshold";
-  public static final String MONITOR_PROJECT_ON_BUILD = "snyk.monitorProjectOnBuild";
-  public static final String FILE = "snyk.file";
-  public static final String ORGANISATION = "snyk.organisation";
-  public static final String PROJECT_NAME = "snyk.projectName";
-  public static final String ADDITIONAL_PARAMETERS = "snyk.additionalParameters";
-  public static final String API_TOKEN = "secure:snyk.apiToken";
-  public static final String VERSION = "snyk.version";
-  public static final String USE_CUSTOM_BUILD_TOOL_PATH = "snyk.useCustomBuildToolPath";
-  public static final String CUSTOM_BUILD_TOOL_PATH = "snyk.customBuildToolPath";
+  public static final String SEVERITY_THRESHOLD = "severityThreshold";
+  public static final String MONITOR_PROJECT_ON_BUILD = "monitorProjectOnBuild";
+  public static final String FILE = "file";
+  public static final String ORGANISATION = "organisation";
+  public static final String PROJECT_NAME = "projectName";
+  public static final String ADDITIONAL_PARAMETERS = "additionalParameters";
+  public static final String API_TOKEN = "secure:apiToken";
+  public static final String VERSION = "version";
+  public static final String USE_CUSTOM_BUILD_TOOL_PATH = "useCustomBuildToolPath";
+  public static final String CUSTOM_BUILD_TOOL_PATH = "customBuildToolPath";
 
   public static final String SNYK_TEST_REPORT_JSON_FILE = "snyk_report.json";
   public static final String SNYK_MONITOR_REPORT_JSON_FILE = "snyk_monitor_report.json";
