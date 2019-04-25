@@ -1,6 +1,7 @@
 # TeamCity Snyk Security Plugin
 
 [![Known Vulnerabilities](https://snyk.io/test/github/snyk/teamcity-snyk-security-plugin/badge.svg)](https://snyk.io/test/github/snyk/teamcity-snyk-security-plugin)
+[![Build Status](https://travis-ci.com/snyk/teamcity-snyk-security-plugin.svg?branch=master)](https://travis-ci.com/snyk/teamcity-snyk-security-plugin)
 
 Enables TeamCity integration with Snyk and allows users to test their applications against the [Snyk vulnerability database](https://snyk.io/vuln).
 
