@@ -9,7 +9,7 @@ Enables TeamCity integration with Snyk and allows users to test their applicatio
 * [Overview](#overview)
 * [Installation](#installation)
 * [Usage](#usage)
-* [Contributions](#contributons)
+* [Contributions](#contributions)
 * [License](#license)
 
 
@@ -23,7 +23,7 @@ Plugin supports following operations:
 
 ## Installation
 
-You can [download]() the plugin build and install it as an [additional plugin](https://confluence.jetbrains.com/display/TCDL/Installing+Additional+Plugins) for TeamCity 2018.2+.
+You can [download the plugin](https://plugins.jetbrains.com/plugin/12227-snyk-security) and install it as an [additional plugin](https://confluence.jetbrains.com/display/TCDL/Installing+Additional+Plugins) for TeamCity 2018.2+.
 
 
 ## Usage
@@ -52,4 +52,4 @@ We appreciate all kinds of feedback, so please feel free to send a PR or submit 
 
 ## License
 
-//TODO
+This project is licensed under the [Apache License, Version 2.0](LICENSE).
