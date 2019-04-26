@@ -31,7 +31,7 @@ public class SnykReportCommand extends SnykBuildServiceAdapter {
     List<String> arguments = new ArrayList<>();
 
     String buildTempDirectory = getBuild().getBuildTempDirectory().getAbsolutePath();
-    String snykReportJson = Paths.get(buildTempDirectory, SnykSecurityRunnerConstants.SNYK_TEST_REPORT_JSON_FILE).toFile().getAbsolutePath();
+    String snykReportJson = Paths.get(buildTempDirectory, SnykSecurityRunnerConstants.SNYK_REPORT_JSON_FILE).toFile().getAbsolutePath();
     String snykReportHtml = Paths.get(buildTempDirectory, SnykSecurityRunnerConstants.SNYK_REPORT_HTML_FILE).toFile().getAbsolutePath();
 
     arguments.add("-i");

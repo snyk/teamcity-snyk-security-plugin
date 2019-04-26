@@ -22,9 +22,9 @@ import org.jetbrains.annotations.Nullable;
 
 import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.MONITOR_PROJECT_ON_BUILD;
 import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.SNYK_ARTIFACTS_DIR;
-import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.SNYK_MONITOR_REPORT_JSON_FILE;
+import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.SNYK_MONITOR_JSON_FILE;
 import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.SNYK_REPORT_HTML_FILE;
-import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.SNYK_TEST_REPORT_JSON_FILE;
+import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.SNYK_REPORT_JSON_FILE;
 import static java.io.File.separator;
 import static java.util.Objects.requireNonNull;
 import static jetbrains.buildServer.ArtifactsConstants.TEAMCITY_ARTIFACTS_DIR;
@@ -77,12 +77,12 @@ public class SnykCommandBuildSession implements MultiCommandBuildSession {
     // steps.add(addCommand(snykVersionCommand, Paths.get(buildTempDirectory, "version.txt")));
 
     SnykTestCommand snykTestCommand = new SnykTestCommand();
-    steps.add(addCommand(snykTestCommand, Paths.get(buildTempDirectory, SNYK_TEST_REPORT_JSON_FILE)));
+    steps.add(addCommand(snykTestCommand, Paths.get(buildTempDirectory, SNYK_REPORT_JSON_FILE)));
 
     String monitorProjectOnBuild = buildRunnerContext.getRunnerParameters().get(MONITOR_PROJECT_ON_BUILD);
     if (getBoolean(monitorProjectOnBuild)) {
       SnykMonitorCommand snykMonitorCommand = new SnykMonitorCommand();
-      steps.add(addCommand(snykMonitorCommand, Paths.get(buildTempDirectory, SNYK_MONITOR_REPORT_JSON_FILE)));
+      steps.add(addCommand(snykMonitorCommand, Paths.get(buildTempDirectory, SNYK_MONITOR_JSON_FILE)));
     }
 
     SnykReportCommand snykReportCommand = new SnykReportCommand();
