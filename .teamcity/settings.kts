@@ -33,8 +33,6 @@ project {
 object Build : BuildType({
     name = "Build"
 
-    artifactRules = "distribution/target/teamcity-snyk-security-plugin.zip"
-
     vcs {
         root(DslContext.settingsRoot)
     }
