@@ -39,7 +39,7 @@ object Build : BuildType({
 
     steps {
         script {
-            scriptContent = "./mvnw clean verify"
+            scriptContent = "./mvnw clean verify --show-version --batch-mode --errors"
         }
     }
 
