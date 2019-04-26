@@ -1,5 +1,5 @@
 import jetbrains.buildServer.configs.kotlin.v2018_2.*
-import jetbrains.buildServer.configs.kotlin.v2018_2.buildSteps.maven
+import jetbrains.buildServer.configs.kotlin.v2018_2.buildSteps.script
 import jetbrains.buildServer.configs.kotlin.v2018_2.triggers.vcs
 
 /*
@@ -40,17 +40,17 @@ object Build : BuildType({
     }
 
     steps {
-        maven {
-            goals = "clean package"
-            runnerArgs = "-Dmaven.test.failure.ignore=true"
-            mavenVersion = custom {
-                path = "%teamcity.tool.maven.3.5.2%"
-            }
+        script {
+            scriptContent = "./mvnw clean verify"
         }
     }
 
     triggers {
         vcs {
         }
+    }
+
+    requirements {
+        contains("teamcity.agent.jvm.os.name", "Linux")
     }
 })
