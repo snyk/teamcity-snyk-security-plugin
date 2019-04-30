@@ -15,6 +15,11 @@ import jetbrains.buildServer.web.openapi.PositionConstraint;
 import jetbrains.buildServer.web.openapi.ViewLogTab;
 import org.jetbrains.annotations.NotNull;
 
+import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.SNYK_ARTIFACTS_DIR;
+import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.SNYK_REPORT_HTML_FILE;
+import static java.io.File.separator;
+import static jetbrains.buildServer.ArtifactsConstants.TEAMCITY_ARTIFACTS_DIR;
+
 public class SnykSecurityReportTab extends ViewLogTab {
 
   private static final String TAB_TITLE = "Snyk Security Report";
@@ -24,9 +29,7 @@ public class SnykSecurityReportTab extends ViewLogTab {
     super(TAB_TITLE, TAB_CODE, pagePlaces, server);
 
     setIncludeUrl("/artifactsViewer.jsp");
-    // setIncludeUrl(pluginDescriptor.getPluginResourcesPath("tab/snykSecurityReport.jsp"));
     setPosition(PositionConstraint.after("artifacts"));
-    // addCssFile(pluginDescriptor.getPluginResourcesPath("tab/snykSecurityReport.css"));
   }
 
   @Override
@@ -44,7 +47,8 @@ public class SnykSecurityReportTab extends ViewLogTab {
   }
 
   private String getSnykHtmlReport(SBuild build) {
-    BuildArtifact artifact = build.getArtifacts(BuildArtifactsViewMode.VIEW_ALL).getArtifact(SnykSecurityRunnerConstants.SNYK_REPORT_HTML_FILE);
-    return artifact != null ? artifact.getRelativePath() : SnykSecurityRunnerConstants.SNYK_REPORT_HTML_FILE;
+    String snykHtmlReportPath = TEAMCITY_ARTIFACTS_DIR + separator + SNYK_ARTIFACTS_DIR + separator + SNYK_REPORT_HTML_FILE;
+    BuildArtifact artifact = build.getArtifacts(BuildArtifactsViewMode.VIEW_HIDDEN_ONLY).getArtifact(snykHtmlReportPath);
+    return artifact != null ? artifact.getRelativePath() : SNYK_REPORT_HTML_FILE;
   }
 }
