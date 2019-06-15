@@ -54,7 +54,7 @@ abstract class SnykBuildServiceAdapter extends BuildServiceAdapter {
 
   private Platform detectAgentPlatform() {
     BuildAgentSystemInfo buildAgentSystemInfo = getAgentConfiguration().getSystemInfo();
-    if (buildAgentSystemInfo.isUnix()) {
+    if (buildAgentSystemInfo.isUnix() && !buildAgentSystemInfo.isMac()) {
       return Platform.LINUX;
     } else if (buildAgentSystemInfo.isMac()) {
       return Platform.MAC_OS;
