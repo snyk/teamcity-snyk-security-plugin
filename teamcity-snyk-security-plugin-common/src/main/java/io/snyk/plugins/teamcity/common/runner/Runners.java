@@ -15,7 +15,7 @@ public final class Runners {
 
   // all bundled versions should be initialized here
   static {
-    AVAILABLE_RUNNERS.put("1.149.0", new RunnerVersion("1.149.0", new HashSet<>(asList(LINUX, MAC_OS, WINDOWS))) {
+    AVAILABLE_RUNNERS.put("1.193.2", new RunnerVersion("1.193.2", new HashSet<>(asList(LINUX, MAC_OS, WINDOWS))) {
       @Override
       public String getSnykToolPath(Platform platform) {
         if (platform == null) {
