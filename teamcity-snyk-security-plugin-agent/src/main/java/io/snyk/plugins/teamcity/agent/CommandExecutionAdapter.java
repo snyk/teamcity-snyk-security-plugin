@@ -7,7 +7,6 @@ import java.nio.file.Path;
 import java.util.List;
 
 import io.snyk.plugins.teamcity.common.ObjectMapperHelper;
-import io.snyk.plugins.teamcity.common.model.SnykApiResponse;
 import jetbrains.buildServer.BuildProblemData;
 import jetbrains.buildServer.RunBuildException;
 import jetbrains.buildServer.TeamCityRuntimeException;
@@ -106,8 +105,7 @@ public class CommandExecutionAdapter implements CommandExecution {
       }
 
       if (exitCode != 0) {
-        String commandOutput = new String(Files.readAllBytes(commandOutputPath), UTF_8);
-        ObjectMapperHelper.unmarshall(commandOutput, SnykApiResponse.class).ifPresent(snykApiResponse -> {
+        ObjectMapperHelper.unmarshall(commandOutputPath).ifPresent(snykApiResponse -> {
           // "error" indicates a hard error, so declare the build as failed
           if (nullIfEmpty(snykApiResponse.error) != null) {
             BuildProblemData buildProblem = createBuildProblem(snykApiResponse.error);
