@@ -122,6 +122,31 @@
     </plugins>
   </build>
 
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-databind</artifactId>
+        <version>${version.jackson.databind}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jetbrains.teamcity</groupId>
+        <artifactId>agent-api</artifactId>
+        <version>${version.teamcity}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jetbrains.teamcity</groupId>
+        <artifactId>server-api</artifactId>
+        <version>${version.teamcity}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jetbrains.teamcity.internal</groupId>
+        <artifactId>server</artifactId>
+        <version>${version.teamcity}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
   <modules>
     <module>teamcity-snyk-security-plugin-common</module>
     <module>teamcity-snyk-security-plugin-agent</module>

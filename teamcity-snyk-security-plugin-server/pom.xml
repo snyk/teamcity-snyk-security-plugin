@@ -17,13 +17,11 @@
     <dependency>
       <groupId>org.jetbrains.teamcity</groupId>
       <artifactId>server-api</artifactId>
-      <version>${version.teamcity}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.jetbrains.teamcity.internal</groupId>
       <artifactId>server</artifactId>
-      <version>${version.teamcity}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
