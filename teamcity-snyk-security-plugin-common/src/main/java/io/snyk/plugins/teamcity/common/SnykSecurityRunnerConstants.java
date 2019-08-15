@@ -6,6 +6,7 @@ public final class SnykSecurityRunnerConstants {
   public static final String RUNNER_DESCRIPTION = "Runner for finding vulnerabilities in your dependencies";
 
   public static final String SEVERITY_THRESHOLD = "severityThreshold";
+  public static final String FAIL_ON_ISSUES = "failOnIssues";
   public static final String MONITOR_PROJECT_ON_BUILD = "monitorProjectOnBuild";
   public static final String FILE = "file";
   public static final String ORGANISATION = "organisation";
@@ -23,6 +24,10 @@ public final class SnykSecurityRunnerConstants {
 
   public String getSeverityThreshold() {
     return SEVERITY_THRESHOLD;
+  }
+
+  public String getFailOnIssues() {
+    return FAIL_ON_ISSUES;
   }
 
   public String getMonitorProjectOnBuild() {

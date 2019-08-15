@@ -17,6 +17,7 @@ import org.jetbrains.annotations.Nullable;
 
 import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.API_TOKEN;
 import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.CUSTOM_BUILD_TOOL_PATH;
+import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.FAIL_ON_ISSUES;
 import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.MONITOR_PROJECT_ON_BUILD;
 import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.SEVERITY_THRESHOLD;
 import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.USE_CUSTOM_BUILD_TOOL_PATH;
@@ -89,8 +90,9 @@ public class SnykSecurityRunType extends RunType {
   @Nullable
   @Override
   public Map<String, String> getDefaultRunnerProperties() {
-    Map<String, String> defaultProperties = new HashMap<>(2);
+    Map<String, String> defaultProperties = new HashMap<>(3);
     defaultProperties.put(SEVERITY_THRESHOLD, "low");
+    defaultProperties.put(FAIL_ON_ISSUES, "true");
     defaultProperties.put(MONITOR_PROJECT_ON_BUILD, "true");
     return defaultProperties;
   }

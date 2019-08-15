@@ -18,6 +18,13 @@
       <span class="smallNote">Only report vulnerabilities of provided level or higher (low/medium/high).</span>
     </td>
   </tr>
+  <tr class="advancedSetting">
+    <th><label>Fail on issues:</label></th>
+    <td>
+      <props:checkboxProperty name="${constants.failOnIssues}"/>
+      <span class="smallNote">Fail the build when issues are found.</span>
+    </td>
+  </tr>
   <tr>
     <th><label>Monitor project on build:</label></th>
     <td>

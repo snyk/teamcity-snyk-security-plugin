@@ -9,11 +9,12 @@
     <span class="smallNote">Note: running without specifying the threshold has the same effect as 'low' option, i.e. all vulnerabilities will be reported.</span>
   </c:if>
 </div>
-
+<div class="parameter">
+  Fail on issues: <strong><props:displayCheckboxValue name="${constants.failOnIssues}"/></strong>
+</div>
 <div class="parameter">
   Monitor project on build: <strong><props:displayCheckboxValue name="${constants.monitorProjectOnBuild}"/></strong>
 </div>
-
 <div class="parameter">
   File: <strong><props:displayValue name="${constants.file}" emptyValue="not specified"/></strong>
 </div>
