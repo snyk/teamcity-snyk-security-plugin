@@ -123,7 +123,7 @@ public class CommandExecutionAdapter implements CommandExecution {
               BuildProblemData buildProblem = createBuildProblem(problem);
               buildService.getLogger().logBuildProblem(buildProblem);
             } else {
-              buildService.getLogger().warning(problem);
+              buildService.getLogger().error(problem);
             }
           }
         });
