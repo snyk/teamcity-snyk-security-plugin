@@ -21,7 +21,14 @@
   <tr class="advancedSetting">
     <th><label>Fail on issues:</label></th>
     <td>
-      <props:checkboxProperty name="${constants.failOnIssues}"/>
+      <c:choose>
+        <c:when test="${propertiesBean.properties.containsKey(constants.failOnIssues)}">
+          <props:checkboxProperty name="${constants.failOnIssues}" uncheckedValue="false"/>
+        </c:when>
+        <c:otherwise>
+          <props:checkboxProperty name="${constants.failOnIssues}" uncheckedValue="false" checked="true"/>
+        </c:otherwise>
+      </c:choose>
       <span class="smallNote">Fail the build when issues are found.</span>
     </td>
   </tr>

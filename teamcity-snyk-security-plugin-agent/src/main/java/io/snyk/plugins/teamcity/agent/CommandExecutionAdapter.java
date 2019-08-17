@@ -118,8 +118,9 @@ public class CommandExecutionAdapter implements CommandExecution {
           if (!snykApiResponse.success && nullIfEmpty(snykApiResponse.summary) != null) {
             String problem = format("%s known issues | %s", snykApiResponse.uniqueCount, snykApiResponse.summary);
 
+            boolean containsFailOnIssues = buildService.getBuildRunnerContext().getRunnerParameters().containsKey(FAIL_ON_ISSUES);
             String failOnIssues = buildService.getBuildRunnerContext().getRunnerParameters().get(FAIL_ON_ISSUES);
-            if (getBoolean(failOnIssues)) {
+            if (getBoolean(failOnIssues) || !containsFailOnIssues) {
               BuildProblemData buildProblem = createBuildProblem(problem);
               buildService.getLogger().logBuildProblem(buildProblem);
             } else {
