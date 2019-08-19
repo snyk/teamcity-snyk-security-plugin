@@ -118,6 +118,10 @@ public class CommandExecutionAdapter implements CommandExecution {
           if (!snykApiResponse.success && nullIfEmpty(snykApiResponse.summary) != null) {
             String problem = format("%s known issues | %s", snykApiResponse.uniqueCount, snykApiResponse.summary);
 
+            /*
+             * we check whether 'failOnIssues' runner parameter exists in case of old configurations.
+             * if 'failOnIssues' was not found, then treat it as 'true' so fail behavior of the plugin is unchanged.
+             */
             boolean containsFailOnIssues = buildService.getBuildRunnerContext().getRunnerParameters().containsKey(FAIL_ON_ISSUES);
             String failOnIssues = buildService.getBuildRunnerContext().getRunnerParameters().get(FAIL_ON_ISSUES);
             if (getBoolean(failOnIssues) || !containsFailOnIssues) {
