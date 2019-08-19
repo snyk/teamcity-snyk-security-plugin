@@ -6,19 +6,20 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
+import io.snyk.plugins.teamcity.agent.commands.SnykBuildServiceAdapter;
 import io.snyk.plugins.teamcity.common.ObjectMapperHelper;
 import jetbrains.buildServer.BuildProblemData;
 import jetbrains.buildServer.RunBuildException;
 import jetbrains.buildServer.TeamCityRuntimeException;
 import jetbrains.buildServer.agent.BuildFinishedStatus;
 import jetbrains.buildServer.agent.runner.CommandExecution;
-import jetbrains.buildServer.agent.runner.CommandLineBuildService;
 import jetbrains.buildServer.agent.runner.ProcessListener;
 import jetbrains.buildServer.agent.runner.ProgramCommandLine;
 import jetbrains.buildServer.agent.runner.TerminationAction;
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
+import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.FAIL_ON_ISSUES;
 import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.RUNNER_DISPLAY_NAME;
 import static java.lang.String.format;
 import static java.lang.String.valueOf;
@@ -27,18 +28,19 @@ import static java.nio.file.StandardOpenOption.APPEND;
 import static java.nio.file.StandardOpenOption.CREATE;
 import static java.util.Objects.requireNonNull;
 import static jetbrains.buildServer.BuildProblemTypes.TC_ERROR_MESSAGE_TYPE;
+import static jetbrains.buildServer.util.PropertiesUtil.getBoolean;
 import static jetbrains.buildServer.util.StringUtil.nullIfEmpty;
 
 public class CommandExecutionAdapter implements CommandExecution {
 
   private static final Logger LOG = Logger.getLogger(CommandExecutionAdapter.class);
 
-  private final CommandLineBuildService buildService;
+  private final SnykBuildServiceAdapter buildService;
   private final Path commandOutputPath;
   private List<ProcessListener> listeners;
   private BuildFinishedStatus result;
 
-  CommandExecutionAdapter(@NotNull CommandLineBuildService buildService, @NotNull Path commandOutputPath) {
+  CommandExecutionAdapter(@NotNull SnykBuildServiceAdapter buildService, @NotNull Path commandOutputPath) {
     this.buildService = requireNonNull(buildService);
     this.commandOutputPath = requireNonNull(commandOutputPath);
     listeners = buildService.getListeners();
@@ -115,8 +117,19 @@ public class CommandExecutionAdapter implements CommandExecution {
 
           if (!snykApiResponse.success && nullIfEmpty(snykApiResponse.summary) != null) {
             String problem = format("%s known issues | %s", snykApiResponse.uniqueCount, snykApiResponse.summary);
-            BuildProblemData buildProblem = createBuildProblem(problem);
-            buildService.getLogger().logBuildProblem(buildProblem);
+
+            /*
+             * we check whether 'failOnIssues' runner parameter exists in case of old configurations.
+             * if 'failOnIssues' was not found, then treat it as 'true' so fail behavior of the plugin is unchanged.
+             */
+            boolean containsFailOnIssues = buildService.getBuildRunnerContext().getRunnerParameters().containsKey(FAIL_ON_ISSUES);
+            String failOnIssues = buildService.getBuildRunnerContext().getRunnerParameters().get(FAIL_ON_ISSUES);
+            if (getBoolean(failOnIssues) || !containsFailOnIssues) {
+              BuildProblemData buildProblem = createBuildProblem(problem);
+              buildService.getLogger().logBuildProblem(buildProblem);
+            } else {
+              buildService.getLogger().error(problem);
+            }
           }
         });
       }

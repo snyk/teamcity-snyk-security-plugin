@@ -8,7 +8,7 @@ services:
     volumes:
       - "./distribution/docker/server:/data/teamcity_server/datadir"
     environment:
-      - TEAMCITY_SERVER_MEM_OPTS="-Xmx2048m"
+      - TEAMCITY_SERVER_MEM_OPTS=-Xmx4096m
 
   agent:
     image: "jetbrains/teamcity-agent:2018.2.3"

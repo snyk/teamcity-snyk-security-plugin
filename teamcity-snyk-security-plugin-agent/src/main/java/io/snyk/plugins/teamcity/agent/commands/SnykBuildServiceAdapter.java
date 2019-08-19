@@ -10,15 +10,21 @@ import io.snyk.plugins.teamcity.common.runner.Runners;
 import jetbrains.buildServer.TeamCityRuntimeException;
 import jetbrains.buildServer.agent.BuildAgentSystemInfo;
 import jetbrains.buildServer.agent.BuildFinishedStatus;
+import jetbrains.buildServer.agent.BuildRunnerContext;
 import jetbrains.buildServer.agent.runner.BuildServiceAdapter;
 import org.jetbrains.annotations.NotNull;
 
 import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.VERSION;
 import static java.lang.String.format;
 
-abstract class SnykBuildServiceAdapter extends BuildServiceAdapter {
+public abstract class SnykBuildServiceAdapter extends BuildServiceAdapter {
 
   abstract List<String> getArguments();
+
+  @NotNull
+  public final BuildRunnerContext getBuildRunnerContext() {
+    return getRunnerContext();
+  }
 
   String getSnykToolPath() {
     String version = getRunnerParameters().get(VERSION);

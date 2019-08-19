@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import io.snyk.plugins.teamcity.agent.commands.SnykBuildServiceAdapter;
 import io.snyk.plugins.teamcity.agent.commands.SnykMonitorCommand;
 import io.snyk.plugins.teamcity.agent.commands.SnykReportCommand;
 import io.snyk.plugins.teamcity.agent.commands.SnykTestCommand;
@@ -15,7 +16,6 @@ import jetbrains.buildServer.agent.BuildFinishedStatus;
 import jetbrains.buildServer.agent.BuildRunnerContext;
 import jetbrains.buildServer.agent.artifacts.ArtifactsWatcher;
 import jetbrains.buildServer.agent.runner.CommandExecution;
-import jetbrains.buildServer.agent.runner.CommandLineBuildService;
 import jetbrains.buildServer.agent.runner.MultiCommandBuildSession;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -72,10 +72,6 @@ public class SnykCommandBuildSession implements MultiCommandBuildSession {
     List<CommandExecutionAdapter> steps = new ArrayList<>(3);
     String buildTempDirectory = buildRunnerContext.getBuild().getBuildTempDirectory().getAbsolutePath();
 
-    // Disable for development process
-    // SnykVersionCommand snykVersionCommand = new SnykVersionCommand();
-    // steps.add(addCommand(snykVersionCommand, Paths.get(buildTempDirectory, "version.txt")));
-
     SnykTestCommand snykTestCommand = new SnykTestCommand();
     steps.add(addCommand(snykTestCommand, Paths.get(buildTempDirectory, SNYK_REPORT_JSON_FILE)));
 
@@ -91,7 +87,7 @@ public class SnykCommandBuildSession implements MultiCommandBuildSession {
     return steps.iterator();
   }
 
-  private CommandExecutionAdapter addCommand(CommandLineBuildService buildService, Path commandOutputPath) {
+  private <T extends SnykBuildServiceAdapter> CommandExecutionAdapter addCommand(T buildService, Path commandOutputPath) {
     try {
       buildService.initialize(buildRunnerContext.getBuild(), buildRunnerContext);
     } catch (RunBuildException ex) {

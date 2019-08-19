@@ -12,6 +12,7 @@ import jetbrains.buildServer.util.CollectionsUtil;
 import jetbrains.buildServer.util.browser.Element;
 import org.jetbrains.annotations.NotNull;
 
+import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.FAIL_ON_ISSUES;
 import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.MONITOR_PROJECT_ON_BUILD;
 import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.RUNNER_TYPE;
 import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.SEVERITY_THRESHOLD;
@@ -41,8 +42,9 @@ public class SnykSecurityRunnerDiscoveryExtension extends BreadthFirstRunnerDisc
     boolean enableSnykSecurityBuildStep = filesAndDirs.stream().anyMatch(element -> element.isLeaf() && SUPPORTED_FILES.contains(element.getName()));
 
     if (enableSnykSecurityBuildStep) {
-      Map<String, String> defaultProperties = new HashMap<>(2);
+      Map<String, String> defaultProperties = new HashMap<>(3);
       defaultProperties.put(SEVERITY_THRESHOLD, "low");
+      defaultProperties.put(FAIL_ON_ISSUES, "true");
       defaultProperties.put(MONITOR_PROJECT_ON_BUILD, "true");
       runners.add(new DiscoveredObject(RUNNER_TYPE, defaultProperties));
     }

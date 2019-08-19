@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import io.snyk.plugins.teamcity.agent.CommandExecutionAdapter;
 import jetbrains.buildServer.RunBuildException;
 import jetbrains.buildServer.agent.runner.ProgramCommandLine;
 import jetbrains.buildServer.agent.runner.SimpleProgramCommandLine;
@@ -31,7 +30,7 @@ import static jetbrains.buildServer.util.StringUtil.nullIfEmpty;
 
 public class SnykMonitorCommand extends SnykBuildServiceAdapter {
 
-  private static final Logger LOG = Logger.getLogger(CommandExecutionAdapter.class);
+  private static final Logger LOG = Logger.getLogger(SnykMonitorCommand.class);
 
   @NotNull
   @Override
