@@ -12,12 +12,15 @@ import jetbrains.buildServer.agent.BuildAgentSystemInfo;
 import jetbrains.buildServer.agent.BuildFinishedStatus;
 import jetbrains.buildServer.agent.BuildRunnerContext;
 import jetbrains.buildServer.agent.runner.BuildServiceAdapter;
+import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.VERSION;
 import static java.lang.String.format;
 
 public abstract class SnykBuildServiceAdapter extends BuildServiceAdapter {
+
+  private static final Logger LOG = Logger.getLogger(SnykBuildServiceAdapter.class);
 
   abstract List<String> getArguments();
 
@@ -30,7 +33,9 @@ public abstract class SnykBuildServiceAdapter extends BuildServiceAdapter {
     String version = getRunnerParameters().get(VERSION);
     RunnerVersion runner = Runners.getRunner(version);
     if (runner == null) {
-      throw new TeamCityRuntimeException(format("Snyk Security runner with version '%s' was not found. Please configure the build properly and retry.", version));
+      LOG.warn(format("Snyk Security runner with version '%s' was not found. Default runner will be used.", version));
+      version = Runners.getDefaultRunnerVersion();
+      runner = Runners.getDefaultRunner();
     }
 
     String agentToolsDirectory = getAgentConfiguration().getAgentToolsDirectory().getAbsolutePath();
@@ -46,7 +51,9 @@ public abstract class SnykBuildServiceAdapter extends BuildServiceAdapter {
     String version = getRunnerParameters().get(VERSION);
     RunnerVersion runner = Runners.getRunner(version);
     if (runner == null) {
-      throw new TeamCityRuntimeException(format("Snyk Security runner with version '%s' was not found. Please configure the build properly and retry.", version));
+      LOG.warn(format("Snyk Security runner with version '%s' was not found. Default runner will be used.", version));
+      version = Runners.getDefaultRunnerVersion();
+      runner = Runners.getDefaultRunner();
     }
 
     String agentToolsDirectory = getAgentConfiguration().getAgentToolsDirectory().getAbsolutePath();

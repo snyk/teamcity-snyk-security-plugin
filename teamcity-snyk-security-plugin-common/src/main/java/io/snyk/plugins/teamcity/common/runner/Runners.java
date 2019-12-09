@@ -12,10 +12,11 @@ import static java.util.Arrays.asList;
 public final class Runners {
 
   private static final TreeMap<String, RunnerVersion> AVAILABLE_RUNNERS = new TreeMap<>();
+  private static final String DEFAULT_VERSION = "1.258.1";
 
   // all bundled versions should be initialized here
   static {
-    AVAILABLE_RUNNERS.put("1.193.2", new RunnerVersion("1.193.2", new HashSet<>(asList(LINUX, MAC_OS, WINDOWS))) {
+    AVAILABLE_RUNNERS.put(DEFAULT_VERSION, new RunnerVersion(DEFAULT_VERSION, new HashSet<>(asList(LINUX, MAC_OS, WINDOWS))) {
       @Override
       public String getSnykToolPath(Platform platform) {
         if (platform == null) {
@@ -36,6 +37,14 @@ public final class Runners {
 
   public static RunnerVersion getRunner(String version) {
     return AVAILABLE_RUNNERS.get(version);
+  }
+
+  public static RunnerVersion getDefaultRunner() {
+    return AVAILABLE_RUNNERS.get(DEFAULT_VERSION);
+  }
+
+  public static String getDefaultRunnerVersion() {
+    return DEFAULT_VERSION;
   }
 
   public Set<String> getVersions() {
