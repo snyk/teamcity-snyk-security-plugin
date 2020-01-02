@@ -5,10 +5,12 @@ services:
     image: "jetbrains/teamcity-server:2018.2.3"
     ports:
       - "${TC_PORT:-8111}:8111"
+      - "${TC_DEBUG_PORT:-8222}:8222"
     volumes:
       - "./distribution/docker/server:/data/teamcity_server/datadir"
     environment:
-      - TEAMCITY_SERVER_MEM_OPTS=-Xmx4096m
+      - JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,address=8222,suspend=n
+      - TEAMCITY_SERVER_MEM_OPTS=-Xmx3072m
 
   agent:
     image: "jetbrains/teamcity-agent:2018.2.3"
