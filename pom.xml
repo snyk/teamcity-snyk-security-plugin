@@ -40,6 +40,7 @@
      | each version property should be of the form "version.<identifier>".
     -->
     <version.jackson.databind>2.10.1</version.jackson.databind>
+    <version.junit5>5.5.2</version.junit5>
     <version.maven.assembly.plugin>3.1.1</version.maven.assembly.plugin>
     <version.maven.clean.plugin>3.1.0</version.maven.clean.plugin>
     <version.maven.compiler.plugin>3.8.0</version.maven.compiler.plugin>
@@ -143,6 +144,16 @@
         <groupId>org.jetbrains.teamcity.internal</groupId>
         <artifactId>server</artifactId>
         <version>${version.teamcity}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-api</artifactId>
+        <version>${version.junit5}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-engine</artifactId>
+        <version>${version.junit5}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
