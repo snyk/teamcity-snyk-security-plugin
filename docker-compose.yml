@@ -4,8 +4,8 @@ services:
   server:
     image: "jetbrains/teamcity-server:2018.2.3"
     ports:
-      - "${TC_PORT:-8111}:8111"
-      - "${TC_DEBUG_PORT:-8222}:8222"
+      - "${TC_SERVER_PORT:-8111}:8111"
+      - "${TC_SERVER_DEBUG_PORT:-8222}:8222"
     volumes:
       - "./distribution/docker/server:/data/teamcity_server/datadir"
     environment:
@@ -14,8 +14,11 @@ services:
 
   agent:
     image: "jetbrains/teamcity-agent:2018.2.3"
+    ports:
+    - "${TC_AGENT_DEBUG_PORT:-8333}:8333"
     volumes:
       - "./distribution/docker/agent:/data/teamcity_agent/conf"
     environment:
       - AGENT_NAME=agent-with-snyk-cli
       - SERVER_URL=server:8111
+      - TEAMCITY_AGENT_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,address=8333,suspend=n
