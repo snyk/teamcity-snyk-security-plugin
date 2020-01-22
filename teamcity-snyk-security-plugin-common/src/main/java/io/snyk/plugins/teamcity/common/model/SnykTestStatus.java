@@ -1,8 +1,8 @@
 package io.snyk.plugins.teamcity.common.model;
 
-public class SnykApiResponse {
-  public boolean success;
+public class SnykTestStatus {
+  public boolean ok;
   public String error;
-  public String summary;
+  public int dependencyCount;
   public int uniqueCount;
 }
