@@ -14,8 +14,11 @@ services:
 
   agent:
     image: "jetbrains/teamcity-agent:2018.2.3"
+    ports:
+    - "8333:8333"
     volumes:
       - "./distribution/docker/agent:/data/teamcity_agent/conf"
     environment:
       - AGENT_NAME=agent-with-snyk-cli
       - SERVER_URL=server:8111
+      - TEAMCITY_AGENT_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,address=8333,suspend=n
