@@ -3,12 +3,12 @@
   <tool-deployment>
     <layout>
       <executable-files>
-        <include name="bin/1.258.1/snyk-linux"/>
-        <include name="bin/1.258.1/snyk-macos"/>
-        <include name="bin/1.258.1/snyk-win.exe"/>
-        <include name="bin/1.258.1/snyk-to-html-linux"/>
-        <include name="bin/1.258.1/snyk-to-html-macos"/>
-        <include name="bin/1.258.1/snyk-to-html-win.exe"/>
+        <include name="bin/1.348.2/snyk-linux"/>
+        <include name="bin/1.348.2/snyk-macos"/>
+        <include name="bin/1.348.2/snyk-win.exe"/>
+        <include name="bin/1.348.2/snyk-to-html-linux"/>
+        <include name="bin/1.348.2/snyk-to-html-macos"/>
+        <include name="bin/1.348.2/snyk-to-html-win.exe"/>
       </executable-files>
     </layout>
   </tool-deployment>
