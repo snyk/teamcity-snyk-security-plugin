@@ -63,7 +63,9 @@ public class SnykCommandBuildSession implements MultiCommandBuildSession {
   public BuildFinishedStatus sessionFinished() {
     String buildTempDirectory = buildRunnerContext.getBuild().getBuildTempDirectory().getAbsolutePath();
     Path snykHtmlReport = Paths.get(buildTempDirectory, SNYK_REPORT_HTML_FILE);
+    Path snykJsonReport = Paths.get(buildTempDirectory, SNYK_REPORT_JSON_FILE);
     artifactsWatcher.addNewArtifactsPath(snykHtmlReport.toAbsolutePath().toString() + " => " + TEAMCITY_ARTIFACTS_DIR + separator + SNYK_ARTIFACTS_DIR);
+    artifactsWatcher.addNewArtifactsPath(snykJsonReport.toAbsolutePath().toString() + " => " + TEAMCITY_ARTIFACTS_DIR + separator + SNYK_ARTIFACTS_DIR);
 
     return lastCommand.getResult();
   }
