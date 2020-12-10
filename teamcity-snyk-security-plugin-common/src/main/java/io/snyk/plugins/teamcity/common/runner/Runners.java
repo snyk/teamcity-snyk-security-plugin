@@ -12,7 +12,7 @@ import static java.util.Arrays.asList;
 public final class Runners {
 
   private static final TreeMap<String, RunnerVersion> AVAILABLE_RUNNERS = new TreeMap<>();
-  private static final String DEFAULT_VERSION = "1.399.1";
+  private static final String DEFAULT_VERSION = "1.427.2";
 
   // all bundled versions should be initialized here
   static {
