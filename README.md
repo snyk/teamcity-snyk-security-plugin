@@ -7,6 +7,7 @@ Enables TeamCity integration with Snyk and allows users to test their applicatio
 
 ## Table of Contents
 
+
 * [Overview](#overview)
 * [Installation](#installation)
 * [Usage](#usage)
