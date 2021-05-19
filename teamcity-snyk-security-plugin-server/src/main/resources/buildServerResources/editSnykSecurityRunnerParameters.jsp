@@ -14,8 +14,9 @@
         <props:option value="low">low</props:option>
         <props:option value="medium">medium</props:option>
         <props:option value="high">high</props:option>
+        <props:option value="critical">critical</props:option>
       </props:selectProperty>
-      <span class="smallNote">Only report vulnerabilities of provided level or higher (low/medium/high).</span>
+      <span class="smallNote">Only report vulnerabilities of provided level or higher (low/medium/high/critical).</span>
     </td>
   </tr>
   <tr class="advancedSetting">
