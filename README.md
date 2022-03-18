@@ -18,8 +18,8 @@ Enables TeamCity integration with Snyk and allows users to test their applicatio
 
 Plugin supports following operations:
 * test projects for known vulnerabilities
-* take an application dependencies snapshot for continuous monitoring by Snyk.
-* create a HTML report displaying the vulnerabilities discovered.
+* take an application dependencies snapshot for continuous monitoring by Snyk
+* create an HTML report displaying the vulnerabilities discovered
 
 
 ## Installation
