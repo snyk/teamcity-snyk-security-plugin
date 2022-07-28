@@ -48,7 +48,7 @@ Otherwise, auto-discover mode will be activated.
 
 ## Contributions
 
-We appreciate all kinds of feedback, so please feel free to send a PR or submit an issue. Read our [Contributors' Guide](.github/CONTRIBUTING.md) for details.
+We appreciate all kinds of feedback, so please feel free to send a PR or submit an issue. Read our [Contributors' Guide](CONTRIBUTING.md) for details.
 
 
 ## License
