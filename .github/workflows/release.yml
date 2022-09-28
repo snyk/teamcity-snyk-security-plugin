@@ -1,0 +1,46 @@
+# Trigger the release workflow by pushing up new tags:
+# git tag -a X.Y.Z -m "Release X.Y.Z"
+# git push origin --tags
+
+name: Release
+on:
+  push:
+    tags:
+      - "*"
+
+jobs:
+  create-assets:
+    name: Create release assets
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@master
+      - name: Create assets
+        run: |
+            ./mvnw clean verify --show-version --batch-mode --errors -Drevision=$GITHUB_REF_NAME \
+            cd ./distribution/target \
+            sha256sum teamcity-snyk-security-plugin.zip > teamcity-snyk-security-plugin.zip.sha256 \
+            cd -
+  create-tagged-release:
+    name: Create GitHub tagged release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Release with assets
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: $GITHUB_REF_NAME
+          files: |
+            ./distribution/target/teamcity-snyk-security-plugin.zip
+            ./distribution/target/teamcity-snyk-security-plugin.zip.sha256
+  upload-plugin:
+    name: Upload plugin
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set env
+        run: echo "JETBRAINS_PUBLISH_TOKEN=${{ secrets.JETBRAINS_PUBLISH_TOKEN }}" >> $GITHUB_ENV
+      - name: Deploy plugin to JetBrains portal
+        run: |
+          echo "Deploying the plugin to JetBrains portal..."
+          curl -i --header "Authorization: Bearer $JETBRAINS_PUBLISH_TOKEN" -F pluginId=12227 -F file=./target/teamcity-snyk-security-plugin.zip https://plugins.jetbrains.com/plugin/uploadPlugin
