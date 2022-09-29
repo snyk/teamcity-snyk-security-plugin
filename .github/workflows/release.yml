@@ -28,9 +28,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Release with assets
-        uses: softprops/action-gh-release@v1
+        uses: "marvinpinto/action-automatic-releases@v1.2.1"
         with:
-          tag_name: $GITHUB_REF_NAME
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          prerelease: false
           files: |
             ./distribution/target/teamcity-snyk-security-plugin.zip
             ./distribution/target/teamcity-snyk-security-plugin.zip.sha256
