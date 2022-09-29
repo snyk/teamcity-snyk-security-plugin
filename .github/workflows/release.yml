@@ -1,44 +1,83 @@
 name: Release
 on:
-  push:
-    tags:
-      - "*"
+  workflow_dispatch:
+  schedule:
+    - cron: '0 9 * * 2'  # every Tuesday at 9 am UTC
 
 jobs:
-  create-assets:
-    name: Create release assets
+  release:
+    name: release
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Create assets
+      - name: Fetch Sources
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: '8'
+          cache: maven
+
+      - name: Build with Maven
         run: |
             ./mvnw clean verify --show-version --batch-mode --errors -Drevision=$GITHUB_REF_NAME \
-            cd ./distribution/target \
-            sha256sum teamcity-snyk-security-plugin.zip > teamcity-snyk-security-plugin.zip.sha256 \
-            cd -
-  create-tagged-release:
-    name: Create GitHub tagged release
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Release with assets
-        uses: "marvinpinto/action-automatic-releases@v1.2.1"
+            sha256sum ./distribution/target/teamcity-snyk-security-plugin.zip > ./distribution/target/teamcity-snyk-security-plugin.zip.sha256
+
+      - name: Set up GitHub actions user
+        uses: fregante/setup-git-user@v1
+
+      - name: Create release tag
+        id: createTag
+        run: |
+          TAG_NAME="v$(git show -s --format=%cd --date=format:%Y%m%d.%H%M%S)"
+          git tag
+          git push --tags
+          echo "::set-output name=tagName::$TAG_NAME"
+
+      - name: Extract release notes
+        id: extract-release-notes
+        uses: ffurrer2/extract-release-notes@v1
+
+      - name: Create release
+        id: create_release
+        if: ${{ !env.ACT }}
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          tag_name: "${{ steps.createTag.outputs.tagName }}"
+          release_name: "${{ steps.createTag.outputs.tagName }}"
+          draft: false
           prerelease: false
-          files: |
-            ./distribution/target/teamcity-snyk-security-plugin.zip
-            ./distribution/target/teamcity-snyk-security-plugin.zip.sha256
-  upload-plugin:
-    name: Upload plugin
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Set env
+          body: '${{ steps.extract-release-notes.outputs.release_notes }}'
+
+      - name: Upload plugin zip asset
+        id: upload-release-asset-zip
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+          asset_path: ./distribution/target/teamcity-snyk-security-plugin.zip
+          asset_name: "teamcity-snyk-security-plugin.zip"
+          asset_content_type: application/zip
+      
+      - name: Upload plugin sha asset
+        id: upload-release-asset-sha
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+          asset_path: ./distribution/target/teamcity-snyk-security-plugin.zip.sha256
+          asset_name: "teamcity-snyk-security-plugin.zip.sha256"
+          asset_content_type: application/text
+
+      - name: Set publish token env var
         run: echo "JETBRAINS_PUBLISH_TOKEN=${{ secrets.JETBRAINS_PUBLISH_TOKEN }}" >> $GITHUB_ENV
+
       - name: Deploy plugin to JetBrains portal
         run: |
           echo "Deploying the plugin to JetBrains portal..."
