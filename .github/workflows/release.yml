@@ -1,7 +1,3 @@
-# Trigger the release workflow by pushing up new tags:
-# git tag -a X.Y.Z -m "Release X.Y.Z"
-# git push origin --tags
-
 name: Release
 on:
   push:
