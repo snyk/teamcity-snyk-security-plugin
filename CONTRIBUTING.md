@@ -11,3 +11,11 @@ The following is a set of guidelines for contributing to TeamCity Snyk Security 
 - Install the plugin following [this](https://docs.snyk.io/integrations/ci-cd-integrations/teamcity-integration-overview) guide
 - Configure the plugin following [this](https://docs.snyk.io/integrations/ci-cd-integrations/teamcity-integration-overview/teamcity-integration-use-snyk-in-your-build) guide
   - Optionally, you can set your API endpoint if it differs from the default (https://snyk.io/). Do this by setting the `SNYK_API` environment variable in the build configuration's parameters page
+
+## Releases
+Releases are handled by the `release` Github Action. It will:
+- Build the plugin assets
+- Create a tagged release with the plugin assets
+- Deploy the plugin to the JetBrains plugin portal
+
+Releases are scheduled to occur every Tuesday.
