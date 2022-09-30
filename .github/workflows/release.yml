@@ -76,9 +76,9 @@ jobs:
       #     asset_name: "teamcity-snyk-security-plugin.zip.sha256"
       #     asset_content_type: application/text
 
-      # - name: Deploy plugin to JetBrains portal
-      #   env:
-      #     JETBRAINS_PUBLISH_TOKEN: ${{ secrets.JETBRAINS_PUBLISH_TOKEN }}
-      #   run: |
-      #     echo "Deploying the plugin to JetBrains portal..."
-      #     curl -i --header "Authorization: Bearer ${JETBRAINS_PUBLISH_TOKEN}" -F pluginId=12227 -F file=${GITHUB_WORKSPACE}/target/teamcity-snyk-security-plugin.zip https://plugins.jetbrains.com/plugin/uploadPlugin/testing/upload
+      - name: Deploy plugin to JetBrains portal
+        env:
+          JETBRAINS_PUBLISH_TOKEN: ${{ secrets.JETBRAINS_PUBLISH_TOKEN }}
+        run: |
+          echo "Deploying the plugin to JetBrains portal..."
+          curl -i --header "Authorization: Bearer ${JETBRAINS_PUBLISH_TOKEN}" -F pluginId=12227 -F file=${GITHUB_WORKSPACE}/target/teamcity-snyk-security-plugin.zip https://plugins.jetbrains.com/plugin/uploadPlugin/testing/upload
