@@ -18,8 +18,4 @@ Releases are handled by the `release` Github Action. It will:
 - Create a tagged release with the plugin assets
 - Deploy the plugin to the JetBrains plugin portal
 
-In order to perform a release, you must tag a new version and push to GitHub:
-```
-# git tag -a X.Y.Z -m "Release X.Y.Z"
-# git push origin --tags
-```
+Releases are scheduled to occur every Tuesday.
