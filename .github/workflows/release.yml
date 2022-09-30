@@ -35,7 +35,8 @@ jobs:
       - name: Build with Maven
         run: |
             ./mvnw clean verify --show-version --batch-mode --errors -Drevision=$TAG_NAME \
-            sha256sum $GITHUB_WORKSPACE/distribution/target/teamcity-snyk-security-plugin.zip > $GITHUB_WORKSPACE/distribution/target/teamcity-snyk-security-plugin.zip.sha256
+            echo ""
+            sha256sum $GITHUB_WORKSPACE/../distribution/target/teamcity-snyk-security-plugin.zip > $GITHUB_WORKSPACE/../distribution/target/teamcity-snyk-security-plugin.zip.sha256
 
       - name: Extract release notes
         id: extract-release-notes
