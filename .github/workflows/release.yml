@@ -15,15 +15,9 @@ jobs:
           fetch-depth: 0
 
       - name: Set up JDK
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v1
         with:
-          java-version: '8'
-          cache: maven
-
-      - name: Build with Maven
-        run: |
-            ./mvnw clean verify --show-version --batch-mode --errors -Drevision=$GITHUB_REF_NAME \
-            sha256sum ./distribution/target/teamcity-snyk-security-plugin.zip > ./distribution/target/teamcity-snyk-security-plugin.zip.sha256
+          java-version: '1.8'
 
       - name: Set up GitHub actions user
         uses: fregante/setup-git-user@v1
@@ -35,6 +29,13 @@ jobs:
           git tag
           git push --tags
           echo "::set-output name=tagName::$TAG_NAME"
+
+      - name: Build with Maven
+        env:
+            TAG_NAME: ${{ steps.createTag.outputs.tagName }}
+        run: |
+          ./mvnw clean verify --show-version --batch-mode --errors -Drevision=${TAG_NAME}
+          sha256sum ./distribution/target/teamcity-snyk-security-plugin.zip > ./distribution/target/teamcity-snyk-security-plugin.zip.sha256
 
       - name: Extract release notes
         id: extract-release-notes
@@ -70,15 +71,14 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./distribution/target/teamcity-snyk-security-plugin.zip.sha256
           asset_name: "teamcity-snyk-security-plugin.zip.sha256"
           asset_content_type: application/text
 
-      - name: Set publish token env var
-        run: echo "JETBRAINS_PUBLISH_TOKEN=${{ secrets.JETBRAINS_PUBLISH_TOKEN }}" >> $GITHUB_ENV
-
       - name: Deploy plugin to JetBrains portal
+        env:
+          JETBRAINS_PUBLISH_TOKEN: ${{ secrets.JETBRAINS_PUBLISH_TOKEN }}
         run: |
           echo "Deploying the plugin to JetBrains portal..."
-          curl -i --header "Authorization: Bearer $JETBRAINS_PUBLISH_TOKEN" -F pluginId=12227 -F file=./target/teamcity-snyk-security-plugin.zip https://plugins.jetbrains.com/plugin/uploadPlugin
+          curl -i --header "Authorization: Bearer ${JETBRAINS_PUBLISH_TOKEN}" -F pluginId=12227 -F file=./distribution/target/teamcity-snyk-security-plugin.zip https://plugins.jetbrains.com/plugin/uploadPlugin
