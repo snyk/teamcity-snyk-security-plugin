@@ -1,6 +1,6 @@
 # Snyk Changelog
 
-## v20220930.131821
+## [1.0.0] - v20220930.131821
 ### Changes
 - chore: update snyk cli to v1.1017.0 [ROAD-1163] (#62) 
 - fix: upgrade com.fasterxml.jackson.core:jackson-databind from 2.13.3 to 2.13.4 (#61)
