@@ -35,7 +35,7 @@ jobs:
             TAG_NAME: ${{ steps.createTag.outputs.tagName }}
         run: |
           ./mvnw clean verify --show-version --batch-mode --errors -Drevision=${TAG_NAME}
-          sha256sum ${GITHUB_WORKSPACE}/teamcity-snyk-security-plugin.zip > ${GITHUB_WORKJ}/teamcity-snyk-security-plugin.zip.sha256
+          sha256sum ${GITHUB_WORKSPACE}/teamcity-snyk-security-plugin.zip > ${GITHUB_WORKSPACE}/teamcity-snyk-security-plugin.zip.sha256
 
       - name: Extract release notes
         id: extract-release-notes
