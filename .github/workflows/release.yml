@@ -81,4 +81,4 @@ jobs:
           JETBRAINS_PUBLISH_TOKEN: ${{ secrets.JETBRAINS_PUBLISH_TOKEN }}
         run: |
           echo "Deploying the plugin to JetBrains portal..."
-          curl -i --header "Authorization: Bearer ${JETBRAINS_PUBLISH_TOKEN}" -F pluginId=12227 -F file=${GITHUB_WORKSPACE}/target/teamcity-snyk-security-plugin.zip https://plugins.jetbrains.com/plugin/uploadPlugin/testing/upload
+          curl -i --header "Authorization: Bearer ${JETBRAINS_PUBLISH_TOKEN}" -F pluginId=12227 -F file=${GITHUB_WORKSPACE}/distribution/target/teamcity-snyk-security-plugin.zip https://plugins.jetbrains.com/plugin/uploadPlugin/testing/upload
