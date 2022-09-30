@@ -10,8 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     env:
       JETBRAINS_PUBLISH_TOKEN: ${{ secrets.JETBRAINS_PUBLISH_TOKEN }}
-      WORKSPACE: ${{ GITHUB_WORKSPACE }}
-      TAG: ${{ GITHUB_REF_NAME }}
+      WORKSPACE: ${{ env.GITHUB_WORKSPACE }}
+      TAG: ${{ env.GITHUB_REF_NAME }}
     steps:
       - name: Fetch Sources
         uses: actions/checkout@v3
