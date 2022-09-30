@@ -33,11 +33,10 @@ jobs:
       - name: Build with Maven
         env:
             TAG_NAME: ${{ steps.createTag.outputs.tagName }}
-        run: |
-            ./mvnw clean verify --show-version --batch-mode --errors -Drevision=${TAG_NAME} \
-            # cd ${GITHUB_WORKSPACE}/distribution/target/
-            # sha256sum teamcity-snyk-security-plugin.zip > teamcity-snyk-security-plugin.zip.sha256
-            # cd ${GITHUB_WORKSPACE}
+        run: ./mvnw clean verify --show-version --batch-mode --errors -Drevision=${TAG_NAME}
+
+      - name: Create build SHA
+        run: sha256sum ${GITHUB_WORKSPACE}/teamcity-snyk-security-plugin.zip > ${GITHUB_WORKSPACE}/teamcity-snyk-security-plugin.zip.sha256
 
       - name: Extract release notes
         id: extract-release-notes
