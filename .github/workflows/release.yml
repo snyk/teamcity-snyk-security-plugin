@@ -8,6 +8,10 @@ jobs:
   release:
     name: release
     runs-on: ubuntu-latest
+    env:
+      JETBRAINS_PUBLISH_TOKEN: ${{ secrets.JETBRAINS_PUBLISH_TOKEN }}
+      WORKSPACE: ${{ GITHUB_WORKSPACE }}
+      TAG: ${{ GITHUB_REF_NAME }}
     steps:
       - name: Fetch Sources
         uses: actions/checkout@v3
@@ -18,12 +22,6 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: '1.8'
-      
-      - name: Set env vars
-        run: |
-          echo "JETBRAINS_PUBLISH_TOKEN=${{ secrets.JETBRAINS_PUBLISH_TOKEN }}" >> $GITHUB_ENV
-          echo "WORKSPACE=${{ GITHUB_WORKSPACE }}" >> $GITHUB_ENV
-          echo "TAG=${{ GITHUB_REF_NAME }}" >> $GITHUB_ENV
 
       - name: Build with Maven
         run: |
