@@ -10,8 +10,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       JETBRAINS_PUBLISH_TOKEN: ${{ secrets.JETBRAINS_PUBLISH_TOKEN }}
-      WORKSPACE: ${{ env.GITHUB_WORKSPACE }}
-      TAG: ${{ env.GITHUB_REF_NAME }}
     steps:
       - name: Fetch Sources
         uses: actions/checkout@v3
@@ -23,11 +21,6 @@ jobs:
         with:
           java-version: '1.8'
 
-      - name: Build with Maven
-        run: |
-            ./mvnw clean verify --show-version --batch-mode --errors -Drevision=$TAG \
-            sha256sum $WORKSPACE/distribution/target/teamcity-snyk-security-plugin.zip > $WORKSPACE/distribution/target/teamcity-snyk-security-plugin.zip.sha256
-
       - name: Set up GitHub actions user
         uses: fregante/setup-git-user@v1
 
@@ -38,6 +31,11 @@ jobs:
           git tag
           git push --tags
           echo "::set-output name=tagName::$TAG_NAME"
+
+      - name: Build with Maven
+        run: |
+            ./mvnw clean verify --show-version --batch-mode --errors -Drevision=$TAG_NAME \
+            sha256sum $GITHUB_WORKSPACE/distribution/target/teamcity-snyk-security-plugin.zip > $GITHUB_WORKSPACE/distribution/target/teamcity-snyk-security-plugin.zip.sha256
 
       - name: Extract release notes
         id: extract-release-notes
@@ -73,7 +71,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./distribution/target/teamcity-snyk-security-plugin.zip.sha256
           asset_name: "teamcity-snyk-security-plugin.zip.sha256"
           asset_content_type: application/text
