@@ -18,11 +18,17 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: '1.8'
+      
+      - name: Set env vars
+        run: |
+          echo "JETBRAINS_PUBLISH_TOKEN=${{ secrets.JETBRAINS_PUBLISH_TOKEN }}" >> $GITHUB_ENV
+          echo "WORKSPACE=${{ GITHUB_WORKSPACE }}" >> $GITHUB_ENV
+          echo "TAG=${{ GITHUB_REF_NAME }}" >> $GITHUB_ENV
 
       - name: Build with Maven
         run: |
-            ./mvnw clean verify --show-version --batch-mode --errors -Drevision=$GITHUB_REF_NAME \
-            sha256sum ./distribution/target/teamcity-snyk-security-plugin.zip > ./distribution/target/teamcity-snyk-security-plugin.zip.sha256
+            ./mvnw clean verify --show-version --batch-mode --errors -Drevision=$TAG \
+            sha256sum $WORKSPACE/distribution/target/teamcity-snyk-security-plugin.zip > $WORKSPACE/distribution/target/teamcity-snyk-security-plugin.zip.sha256
 
       - name: Set up GitHub actions user
         uses: fregante/setup-git-user@v1
@@ -73,9 +79,6 @@ jobs:
           asset_path: ./distribution/target/teamcity-snyk-security-plugin.zip.sha256
           asset_name: "teamcity-snyk-security-plugin.zip.sha256"
           asset_content_type: application/text
-
-      - name: Set publish token env var
-        run: echo "JETBRAINS_PUBLISH_TOKEN=${{ secrets.JETBRAINS_PUBLISH_TOKEN }}" >> $GITHUB_ENV
 
       - name: Deploy plugin to JetBrains portal
         run: |
