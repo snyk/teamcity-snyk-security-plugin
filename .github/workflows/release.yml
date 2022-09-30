@@ -36,7 +36,7 @@ jobs:
         env:
             TAG_NAME: ${{ steps.createTag.outputs.tagName }}
         run: |
-            echo "current tag: $TAG_NAME" \
+            pwd \
             ./mvnw clean verify --show-version --batch-mode --errors -Drevision=$TAG_NAME \
             sha256sum $GITHUB_WORKSPACE/../distribution/target/teamcity-snyk-security-plugin.zip > $GITHUB_WORKSPACE/../distribution/target/teamcity-snyk-security-plugin.zip.sha256
 
