@@ -16,11 +16,11 @@ fi
 
 mkdir -p "$OUTPUT_DIR"
 
-curl -o "$OUTPUT_DIR/snyk-alpine" "https://static.snyk.io/cli/$CLI_VERSION/snyk-alpine"
-curl -o "$OUTPUT_DIR/snyk-macos" "https://static.snyk.io/cli/$CLI_VERSION/snyk-macos"
-curl -o "$OUTPUT_DIR/snyk-linux" "https://static.snyk.io/cli/$CLI_VERSION/snyk-linux"
-curl -o "$OUTPUT_DIR/snyk-win.exe" "https://static.snyk.io/cli/$CLI_VERSION/snyk-win.exe"
-curl -o "$OUTPUT_DIR/snyk-linux-arm64" "https://static.snyk.io/cli/$CLI_VERSION/snyk-linux-arm64"
+curl -o "$OUTPUT_DIR/snyk-alpine" "https://static.snyk.io/cli/v$CLI_VERSION/snyk-alpine"
+curl -o "$OUTPUT_DIR/snyk-macos" "https://static.snyk.io/cli/v$CLI_VERSION/snyk-macos"
+curl -o "$OUTPUT_DIR/snyk-linux" "https://static.snyk.io/cli/v$CLI_VERSION/snyk-linux"
+curl -o "$OUTPUT_DIR/snyk-win.exe" "https://static.snyk.io/cli/v$CLI_VERSION/snyk-win.exe"
+curl -o "$OUTPUT_DIR/snyk-linux-arm64" "https://static.snyk.io/cli/v$CLI_VERSION/snyk-linux-arm64"
 
 curl -o "$OUTPUT_DIR/snyk-to-html-alpine" "https://static.snyk.io/snyk-to-html/latest/snyk-to-html-alpine"
 curl -o "$OUTPUT_DIR/snyk-to-html-macos" "https://static.snyk.io/snyk-to-html/latest/snyk-to-html-macos"
