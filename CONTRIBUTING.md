@@ -13,6 +13,10 @@ The following is a set of guidelines for contributing to TeamCity Snyk Security 
   - Optionally, you can set your API endpoint if it differs from the default (https://snyk.io/). Do this by setting the `SNYK_API` environment variable in the build configuration's parameters page
 
 ## Releases
+
+Before releasing, **please update the CLI**. This can be done by executing the `update-cli.sh` script. It is only tested
+on macOS and may need adjustments on Linux for the `sed` command.
+
 Releases are handled by the `release` Github Action. It will:
 - Build the plugin assets
 - Create a tagged release with the plugin assets
