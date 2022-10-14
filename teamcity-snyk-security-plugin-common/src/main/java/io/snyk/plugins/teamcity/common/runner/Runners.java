@@ -16,6 +16,7 @@ public final class Runners {
 
   // all bundled versions should be initialized here
   static {
+    // TODO additional architectures should be added here when needed, e.g. arm64 & alpine
     AVAILABLE_RUNNERS.put(DEFAULT_VERSION, new RunnerVersion(DEFAULT_VERSION, new HashSet<>(asList(LINUX, MAC_OS, WINDOWS))) {
       @Override
       public String getSnykToolPath(Platform platform) {

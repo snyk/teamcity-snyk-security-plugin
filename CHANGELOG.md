@@ -1,5 +1,8 @@
 # Snyk Changelog
 
+## [1.0.0] - Unreleased
+- chore: update xml to include arm & alpine binaries, add todo to support in code, add helper script for cli updates
+
 ## [1.0.0] - v20220930.131821
 ### Changes
 - chore: update snyk cli to v1.1017.0 [ROAD-1163] (#62) 

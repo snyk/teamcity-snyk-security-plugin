@@ -4,8 +4,11 @@
     <layout>
       <executable-files>
         <include name="bin/1.1017.0/snyk-linux"/>
+        <include name="bin/1.1017.0/snyk-linux-alpine"/>
+        <include name="bin/1.1017.0/snyk-linux-arm64"/>
         <include name="bin/1.1017.0/snyk-macos"/>
         <include name="bin/1.1017.0/snyk-win.exe"/>
+        <include name="bin/1.1017.0/snyk-to-html-alpine"/>
         <include name="bin/1.1017.0/snyk-to-html-linux"/>
         <include name="bin/1.1017.0/snyk-to-html-macos"/>
         <include name="bin/1.1017.0/snyk-to-html-win.exe"/>
