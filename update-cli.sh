@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -e
+set -ex
 # shellcheck disable=SC2128
 SCRIPT_PATH="$(readlink -f "${BASH_SOURCE}")"
 SCRIPT_DIR="$(cd -P "$(dirname -- "${SCRIPT_PATH}")" >/dev/null 2>&1 && pwd)"
@@ -26,18 +26,19 @@ curl -o "$OUTPUT_DIR/snyk-to-html-alpine" "https://static.snyk.io/snyk-to-html/l
 curl -o "$OUTPUT_DIR/snyk-to-html-macos" "https://static.snyk.io/snyk-to-html/latest/snyk-to-html-macos"
 curl -o "$OUTPUT_DIR/snyk-to-html-linux" "https://static.snyk.io/snyk-to-html/latest/snyk-to-html-linux"
 curl -o "$OUTPUT_DIR/snyk-to-html-win.exe" "https://static.snyk.io/snyk-to-html/latest/snyk-to-html-win.exe"
-
 chmod -R +x "$OUTPUT_DIR"
 
-# shellcheck disable=SC2012
+
 OLD_DIR=$(ls "$OUTPUT_DIR/.."| sort | head -1)
-if [[ $OLD_DIR != "$CLI_VERSION" ]]
-then
-  rm -rf "$OLD_DIR"
-fi
 
 sed -i '' "s/$OLD_DIR/$CLI_VERSION/g" teamcity-snyk-security-plugin-agent/src/assembly/teamcity-plugin-runner.xml
 sed -i '' "s/$OLD_DIR/$CLI_VERSION/g" teamcity-snyk-security-plugin-common/src/main/java/io/snyk/plugins/teamcity/common/runner/Runners.java
+
+# shellcheck disable=SC2012
+if [[ $OLD_DIR != "$CLI_VERSION" ]]
+then
+  git rm -r "$OUTPUT_DIR/../$OLD_DIR"
+fi
 
 git add "$OUTPUT_DIR"
 git add teamcity-snyk-security-plugin-agent/src/assembly/teamcity-plugin-runner.xml
