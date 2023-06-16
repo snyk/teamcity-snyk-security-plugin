@@ -25,7 +25,7 @@ jobs:
       - name: Create release tag
         id: createTag
         run: |
-          TAG_NAME="v$(git show -s --format=%cd --date=format:%Y%m%d.%H%M%S)"
+          TAG_NAME="v$(date +%Y%m%d.%H%M%S)"
           git tag
           git push --tags
           echo "::set-output name=tagName::$TAG_NAME"
