@@ -3,15 +3,15 @@
   <tool-deployment>
     <layout>
       <executable-files>
-        <include name="bin/1.1064.0/snyk-linux"/>
-        <include name="bin/1.1064.0/snyk-linux-alpine"/>
-        <include name="bin/1.1064.0/snyk-linux-arm64"/>
-        <include name="bin/1.1064.0/snyk-macos"/>
-        <include name="bin/1.1064.0/snyk-win.exe"/>
-        <include name="bin/1.1064.0/snyk-to-html-alpine"/>
-        <include name="bin/1.1064.0/snyk-to-html-linux"/>
-        <include name="bin/1.1064.0/snyk-to-html-macos"/>
-        <include name="bin/1.1064.0/snyk-to-html-win.exe"/>
+        <include name="bin/latest/snyk-linux"/>
+        <include name="bin/latest/snyk-linux-alpine"/>
+        <include name="bin/latest/snyk-linux-arm64"/>
+        <include name="bin/latest/snyk-macos"/>
+        <include name="bin/latest/snyk-win.exe"/>
+        <include name="bin/latest/snyk-to-html-alpine"/>
+        <include name="bin/latest/snyk-to-html-linux"/>
+        <include name="bin/latest/snyk-to-html-macos"/>
+        <include name="bin/latest/snyk-to-html-win.exe"/>
       </executable-files>
     </layout>
   </tool-deployment>
