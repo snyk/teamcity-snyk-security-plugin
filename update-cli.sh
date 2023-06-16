@@ -40,7 +40,7 @@ then
   git rm -r "$OUTPUT_DIR/../$OLD_DIR"
 fi
 
-git add "$OUTPUT_DIR"
+git add -f "$OUTPUT_DIR"
 git add teamcity-snyk-security-plugin-agent/src/assembly/teamcity-plugin-runner.xml
 git add teamcity-snyk-security-plugin-common/src/main/java/io/snyk/plugins/teamcity/common/runner/Runners.java
 
