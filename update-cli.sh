@@ -4,6 +4,9 @@ set -ex
 SCRIPT_PATH="$(readlink -f "${BASH_SOURCE}")"
 SCRIPT_DIR="$(cd -P "$(dirname -- "${SCRIPT_PATH}")" >/dev/null 2>&1 && pwd)"
 
+METADATA_CLI=$(curl https://static.snyk.io/cli/latest/release.json)
+echo "Using latest CLI version, which is $(echo "$METADATA_CLI" | jq -r '.version')"
+
 CLI_VERSION='latest'
 OUTPUT_DIR="$SCRIPT_DIR/teamcity-snyk-security-plugin-agent/src/runner/bin/$CLI_VERSION"
 
