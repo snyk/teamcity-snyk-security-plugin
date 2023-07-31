@@ -18,6 +18,7 @@ import jetbrains.buildServer.web.openapi.PagePlaces;
 import jetbrains.buildServer.web.openapi.PluginDescriptor;
 import jetbrains.buildServer.web.openapi.PositionConstraint;
 import jetbrains.buildServer.web.openapi.ViewLogTab;
+import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.SNYK_ARTIFACTS_DIR;
@@ -29,6 +30,8 @@ public class SnykSecurityReportTab extends ViewLogTab {
 
   private static final String TAB_TITLE = "Snyk Security Report";
   private static final String TAB_CODE = "snykSecurityReport";
+
+  private static final Logger LOG = Logger.getLogger(SnykSecurityReportTab.class);
 
   public SnykSecurityReportTab(@NotNull PagePlaces pagePlaces, @NotNull SBuildServer server, @NotNull PluginDescriptor pluginDescriptor) {
     super(TAB_TITLE, TAB_CODE, pagePlaces, server);
@@ -52,11 +55,13 @@ public class SnykSecurityReportTab extends ViewLogTab {
     return buildType.getRunnerTypes().contains(SnykSecurityRunnerConstants.RUNNER_TYPE);
   }
 
-  private String readSnykHtmlReport(SBuild build) {
+  private String readSnykHtmlReport(@NotNull SBuild build) {
     String snykHtmlReportPath = TEAMCITY_ARTIFACTS_DIR + separator + SNYK_ARTIFACTS_DIR + separator + SNYK_REPORT_HTML_FILE;
     BuildArtifact artifact = build.getArtifacts(BuildArtifactsViewMode.VIEW_HIDDEN_ONLY).getArtifact(snykHtmlReportPath);
+
     if (artifact == null) {
-      return null; // TODO - Handle the case when artifact is not found
+      LOG.error("An error occurred while reading the Snyk HTML report - artifact not found");
+      return generateErrorMessage("Artifact not found");
     }
 
     try (InputStream inputStream = artifact.getInputStream();
@@ -68,8 +73,12 @@ public class SnykSecurityReportTab extends ViewLogTab {
       }
       return content.toString();
     } catch (IOException e) {
-      // TODO - Handle the exception properly, maybe log it
-      return null;
+      LOG.error("An error occurred while reading the Snyk HTML report.", e);
+      return generateErrorMessage("An error occurred while reading the report");
     }
+  }
+
+  private String generateErrorMessage(String message) {
+    return "<html><head><title>Error</title></head><body><h1>Snyk report error: " + message + "</h1></body></html>";
   }
 }
