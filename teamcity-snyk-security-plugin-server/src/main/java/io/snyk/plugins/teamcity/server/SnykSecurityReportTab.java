@@ -1,6 +1,11 @@
 package io.snyk.plugins.teamcity.server;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 import io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants;
@@ -28,13 +33,14 @@ public class SnykSecurityReportTab extends ViewLogTab {
   public SnykSecurityReportTab(@NotNull PagePlaces pagePlaces, @NotNull SBuildServer server, @NotNull PluginDescriptor pluginDescriptor) {
     super(TAB_TITLE, TAB_CODE, pagePlaces, server);
 
-    setIncludeUrl("/artifactsViewer.jsp");
+    String path = pluginDescriptor.getPluginResourcesPath("tab/snykReport.jsp");
+    setIncludeUrl(path);
     setPosition(PositionConstraint.after("artifacts"));
   }
 
   @Override
   protected void fillModel(@NotNull Map<String, Object> map, @NotNull HttpServletRequest httpServletRequest, @NotNull SBuild build) {
-    map.put("startPage", getSnykHtmlReport(build));
+    map.put("snykHtmlReportContent", readSnykHtmlReport(build));
   }
 
   @Override
@@ -46,9 +52,24 @@ public class SnykSecurityReportTab extends ViewLogTab {
     return buildType.getRunnerTypes().contains(SnykSecurityRunnerConstants.RUNNER_TYPE);
   }
 
-  private String getSnykHtmlReport(SBuild build) {
+  private String readSnykHtmlReport(SBuild build) {
     String snykHtmlReportPath = TEAMCITY_ARTIFACTS_DIR + separator + SNYK_ARTIFACTS_DIR + separator + SNYK_REPORT_HTML_FILE;
     BuildArtifact artifact = build.getArtifacts(BuildArtifactsViewMode.VIEW_HIDDEN_ONLY).getArtifact(snykHtmlReportPath);
-    return artifact != null ? artifact.getRelativePath() : SNYK_REPORT_HTML_FILE;
+    if (artifact == null) {
+      return null; // TODO - Handle the case when artifact is not found
+    }
+
+    try (InputStream inputStream = artifact.getInputStream();
+         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
+      StringBuilder content = new StringBuilder();
+      String line;
+      while ((line = reader.readLine()) != null) {
+        content.append(line).append("\n");
+      }
+      return content.toString();
+    } catch (IOException e) {
+      // TODO - Handle the exception properly, maybe log it
+      return null;
+    }
   }
 }
