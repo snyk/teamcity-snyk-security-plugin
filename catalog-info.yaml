@@ -4,8 +4,8 @@ metadata:
   name: teamcity-snyk-security-plugin
   annotations:
     github.com/project-slug: snyk/teamcity-snyk-security-plugin
-    github.com/team-slug: snyk/hammerhead
+    github.com/team-slug: snyk/cli
 spec:
   type: supply-chain-tooling
   lifecycle: "-"
-  owner: hammerhead
+  owner: cli
