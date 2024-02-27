@@ -21,7 +21,7 @@ workflows:
           context:
             - snyk-bot-slack
           channel: cli-alerts
+          trusted-branch: main
 
       - security-scans:
           context: devex_cli
-          trusted-branch: main
