@@ -50,7 +50,7 @@
     <version.maven.resources.plugin>3.1.0</version.maven.resources.plugin>
     <version.maven.site.plugin>3.7.1</version.maven.site.plugin>
     <version.maven.surefire.plugin>3.0.0-M3</version.maven.surefire.plugin>
-    <version.teamcity>2018.2</version.teamcity>
+    <version.teamcity>2024.07</version.teamcity>
   </properties>
 
   <build>
