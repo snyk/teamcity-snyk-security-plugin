@@ -4,6 +4,7 @@ public final class SnykSecurityRunnerConstants {
   public static final String RUNNER_TYPE = "snykSecurity";
   public static final String RUNNER_DISPLAY_NAME = "Snyk Security";
   public static final String RUNNER_DESCRIPTION = "Runner for finding vulnerabilities in your dependencies";
+  public static final String SNYK_INTEGRATION_NAME = "TEAMCITY";
 
   public static final String SEVERITY_THRESHOLD = "severityThreshold";
   public static final String FAIL_ON_ISSUES = "failOnIssues";
@@ -11,6 +12,8 @@ public final class SnykSecurityRunnerConstants {
   public static final String FILE = "file";
   public static final String ORGANISATION = "organisation";
   public static final String PROJECT_NAME = "projectName";
+  public static final String RUN_SBOM = "runSbom";
+  public static final String SBOM_FORMAT = "sbomFormat";
   public static final String ADDITIONAL_PARAMETERS = "additionalParameters";
   public static final String API_TOKEN = "secure:apiToken";
   public static final String VERSION = "version";
@@ -19,8 +22,10 @@ public final class SnykSecurityRunnerConstants {
 
   public static final String SNYK_ARTIFACTS_DIR = "snyk";
   public static final String SNYK_REPORT_JSON_FILE = "snyk_report.json";
-  public static final String SNYK_REPORT_HTML_FILE = "snyk_report.html";
   public static final String SNYK_MONITOR_JSON_FILE = "snyk_monitor.json";
+  public static final String SNYK_SBOM_JSON_FILE = "snyk_sbom.json";
+  public static final String SNYK_SBOM_TEST_JSON_FILE = "snyk_sbom_test.json";
+  public static final String SNYK_REPORT_HTML_FILE = "snyk_report.html";
 
   public String getSeverityThreshold() {
     return SEVERITY_THRESHOLD;
@@ -64,5 +69,13 @@ public final class SnykSecurityRunnerConstants {
 
   public String getCustomBuildToolPath() {
     return CUSTOM_BUILD_TOOL_PATH;
+  }
+
+  public String getRunSbom() {
+    return RUN_SBOM;
+  }
+  
+  public String getSbomFormat() {
+    return SBOM_FORMAT;
   }
 }

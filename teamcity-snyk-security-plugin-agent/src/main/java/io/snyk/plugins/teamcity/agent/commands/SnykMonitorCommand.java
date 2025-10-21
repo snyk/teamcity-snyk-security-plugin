@@ -21,6 +21,7 @@ import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.FILE;
 import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.ORGANISATION;
 import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.PROJECT_NAME;
 import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.SEVERITY_THRESHOLD;
+import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.SNYK_INTEGRATION_NAME;
 import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.USE_CUSTOM_BUILD_TOOL_PATH;
 import static java.lang.String.join;
 import static java.util.Arrays.asList;
@@ -43,6 +44,7 @@ public class SnykMonitorCommand extends SnykBuildServiceAdapter {
     }
     Map<String, String> envVars = new HashMap<>(getEnvironmentVariables());
     envVars.put("SNYK_TOKEN", snykApiToken);
+    envVars.put("SNYK_INTEGRATION_NAME", SNYK_INTEGRATION_NAME);
     configureCustomBuildPath(envVars);
 
     return new SimpleProgramCommandLine(envVars, getWorkingDirectory().getAbsolutePath(), snykToolPath, getArguments());

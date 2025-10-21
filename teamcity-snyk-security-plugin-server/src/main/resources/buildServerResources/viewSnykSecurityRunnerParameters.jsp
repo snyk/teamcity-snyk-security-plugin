@@ -30,3 +30,9 @@
 <div class="parameter">
   Custom build tool path: <strong><props:displayValue name="${constants.customBuildToolPath}" emptyValue="not specified"/></strong>
 </div>
+<div class="parameter">
+  SBOM test: <strong><props:displayCheckboxValue name="${constants.runSbom}"/></strong>
+</div>
+<div class="parameter">
+  SBOM format: <strong><props:displayValue name="${constants.sbomFormat}" emptyValue="not specified"/></strong>
+</div>

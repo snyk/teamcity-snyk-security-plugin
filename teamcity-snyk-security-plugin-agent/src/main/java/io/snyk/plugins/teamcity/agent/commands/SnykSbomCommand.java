@@ -14,24 +14,20 @@ import jetbrains.buildServer.util.FileUtil;
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
-import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.ADDITIONAL_PARAMETERS;
 import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.API_TOKEN;
 import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.CUSTOM_BUILD_TOOL_PATH;
-import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.FILE;
 import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.ORGANISATION;
-import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.PROJECT_NAME;
-import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.SEVERITY_THRESHOLD;
+import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.SBOM_FORMAT;
 import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.SNYK_INTEGRATION_NAME;
 import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.USE_CUSTOM_BUILD_TOOL_PATH;
 import static java.lang.String.join;
-import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static jetbrains.buildServer.util.PropertiesUtil.getBoolean;
 import static jetbrains.buildServer.util.StringUtil.nullIfEmpty;
 
-public class SnykTestCommand extends SnykBuildServiceAdapter {
+public class SnykSbomCommand extends SnykBuildServiceAdapter {
 
-  private static final Logger LOG = Logger.getLogger(SnykTestCommand.class);
+  private static final Logger LOG = Logger.getLogger(SnykSbomCommand.class);
 
   @NotNull
   @Override
@@ -52,36 +48,21 @@ public class SnykTestCommand extends SnykBuildServiceAdapter {
 
   @Override
   public void beforeProcessStarted() {
-    getBuild().getBuildLogger().message("Testing for known issues...");
+    getBuild().getBuildLogger().message("Generating SBOM for project...");
   }
 
   @Override
   List<String> getArguments() {
     List<String> arguments = new ArrayList<>();
-    arguments.add("test");
+    arguments.add("sbom");
     arguments.add("--json");
-
-    String severityThreshold = getRunnerParameters().getOrDefault(SEVERITY_THRESHOLD, "low");
-    arguments.add("--severity-threshold=" + severityThreshold);
-
-    String file = getRunnerParameters().get(FILE);
-    if (nullIfEmpty(file) != null) {
-      arguments.add("--file=" + file);
-    }
+    
+    String sbomFormat = getRunnerParameters().getOrDefault(SBOM_FORMAT, "cyclonedx1.6+json");
+    arguments.add("--format=" + sbomFormat);
 
     String organisation = getRunnerParameters().get(ORGANISATION);
     if (nullIfEmpty(organisation) != null) {
       arguments.add("--org=" + organisation);
-    }
-
-    String projectName = getRunnerParameters().get(PROJECT_NAME);
-    if (nullIfEmpty(projectName) != null) {
-      arguments.add("--project-name=" + projectName);
-    }
-
-    String additionalParameters = getRunnerParameters().get(ADDITIONAL_PARAMETERS);
-    if (nullIfEmpty(additionalParameters) != null) {
-      arguments.addAll(asList(additionalParameters.split("\\s+")));
     }
 
     return arguments;

@@ -34,3 +34,4 @@ Thumbs.db
 .directory
 .DS_Store
 .dccache
+.cursor/rules/snyk_rules.mdc
