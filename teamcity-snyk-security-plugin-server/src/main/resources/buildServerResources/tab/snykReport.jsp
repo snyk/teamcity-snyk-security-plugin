@@ -7,6 +7,7 @@
 </c:if>
 
 <c:if test="${empty error}">
+  <%-- snykHtmlReportContent is sanitized server-side (SnykReportHtmlSanitizer) before inclusion --%>
   <div>
       ${snykHtmlReportContent}
   </div>
