@@ -20,6 +20,7 @@ import jetbrains.buildServer.web.openapi.PositionConstraint;
 import jetbrains.buildServer.web.openapi.ViewLogTab;
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
+import org.owasp.encoder.Encode;
 
 import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.SNYK_ARTIFACTS_DIR;
 import static io.snyk.plugins.teamcity.common.SnykSecurityRunnerConstants.SNYK_REPORT_HTML_FILE;
@@ -58,27 +59,31 @@ public class SnykSecurityReportTab extends ViewLogTab {
   private String readSnykHtmlReport(@NotNull SBuild build) {
     String snykHtmlReportPath = TEAMCITY_ARTIFACTS_DIR + separator + SNYK_ARTIFACTS_DIR + separator + SNYK_REPORT_HTML_FILE;
     BuildArtifact artifact = build.getArtifacts(BuildArtifactsViewMode.VIEW_HIDDEN_ONLY).getArtifact(snykHtmlReportPath);
+    String htmlContent;
 
     if (artifact == null) {
       LOG.error("An error occurred while reading the Snyk HTML report - artifact not found");
-      return generateErrorMessage("Artifact not found");
+      htmlContent = generateErrorMessage("Artifact not found");
+    } else {
+      try (InputStream inputStream = artifact.getInputStream();
+           BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
+        StringBuilder content = new StringBuilder();
+        String line;
+        while ((line = reader.readLine()) != null) {
+          content.append(line).append("\n");
+        }
+        htmlContent = content.toString();
+      } catch (IOException e) {
+        LOG.error("An error occurred while reading the Snyk HTML report.", e);
+        htmlContent = generateErrorMessage("An error occurred while reading the report");
+      }
     }
 
-    try (InputStream inputStream = artifact.getInputStream();
-         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
-      StringBuilder content = new StringBuilder();
-      String line;
-      while ((line = reader.readLine()) != null) {
-        content.append(line).append("\n");
-      }
-      return content.toString();
-    } catch (IOException e) {
-      LOG.error("An error occurred while reading the Snyk HTML report.", e);
-      return generateErrorMessage("An error occurred while reading the report");
-    }
+    return SnykReportHtmlSanitizer.sanitize(htmlContent);
   }
 
   private String generateErrorMessage(String message) {
-    return "<html><head><title>Error</title></head><body><h1>Snyk report error: " + message + "</h1></body></html>";
+    String safeMessage = Encode.forHtml(message);
+    return "<h1>Snyk report error: " + safeMessage + "</h1>";
   }
 }

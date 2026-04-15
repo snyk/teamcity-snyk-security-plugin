@@ -50,6 +50,8 @@
     <version.maven.resources.plugin>3.1.0</version.maven.resources.plugin>
     <version.maven.site.plugin>3.7.1</version.maven.site.plugin>
     <version.maven.surefire.plugin>3.0.0-M3</version.maven.surefire.plugin>
+    <version.owasp.encoder>1.4.0</version.owasp.encoder>
+    <version.owasp.java.html.sanitizer>20260101.1</version.owasp.java.html.sanitizer>
     <version.teamcity>2024.07</version.teamcity>
   </properties>
 
@@ -154,6 +156,16 @@
         <groupId>org.junit.jupiter</groupId>
         <artifactId>junit-jupiter-engine</artifactId>
         <version>${version.junit5}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.googlecode.owasp-java-html-sanitizer</groupId>
+        <artifactId>owasp-java-html-sanitizer</artifactId>
+        <version>${version.owasp.java.html.sanitizer}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.owasp.encoder</groupId>
+        <artifactId>encoder</artifactId>
+        <version>${version.owasp.encoder}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
